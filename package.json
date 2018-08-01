@@ -11,7 +11,7 @@
     "test": "test"
   },
   "dependencies": {
-    "chalk": "^2.4.1",
+    "chalk": "~2.4.1",
     "gulp": "~3.9.1",
     "gulp-filter": "~2.0.2",
     "gulp-jshint": "~1.9.4",
@@ -36,7 +36,9 @@
     "yyl-inlinesource": "~1.2.1",
     "yyl-util": "~1.14.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "~4.1.2"
+  },
   "scripts": {
     "test": "mocha ./test/test.js"
   },
