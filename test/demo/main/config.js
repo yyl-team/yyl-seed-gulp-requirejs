@@ -71,10 +71,15 @@ var
             cssDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.cssPath),
             // images 输出地址
             imagesDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.imagesPath),
+            // tpl 输出路径
+            tplDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.tplPath),
             // assets 输出地址
             revDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.revPath),
-        }
+        },
         // -此部分 yyl server 端config 会进行替换
+        commit: {
+            hostname: 'http://yyweb.yystatic.com/'
+        }
     };
 
 module.exports = config;

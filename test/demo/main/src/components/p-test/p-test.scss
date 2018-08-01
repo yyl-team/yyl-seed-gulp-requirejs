@@ -1,7 +1,4 @@
 @charset "utf-8";
-@import '../../sass/base/fontface';
-@include fontface('../../sass/base');
-
 .p-test-module {
     padding: 8px;
     .tl {
