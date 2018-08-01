@@ -17,8 +17,8 @@ const fn = {
   frag: {
     clearDest(config) {
       return new Promise((next) => {
-        if (fs.existsSync(config.destRoot)) {
-          util.removeFiles(config.destRoot);
+        if (fs.existsSync(config.alias.destRoot)) {
+          util.removeFiles(config.alias.destRoot);
         }
 
         setTimeout(() => {

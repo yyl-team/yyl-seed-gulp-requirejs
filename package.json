@@ -11,8 +11,8 @@
     "test": "test"
   },
   "dependencies": {
-    "chalk": "~2.4.1",
-    "gulp": "~3.9.1",
+    "chalk": "^2.4.1",
+    "gulp": "^3.9.1",
     "gulp-filter": "~2.0.2",
     "gulp-jshint": "~1.9.4",
     "gulp-minify-css": "~1.0.0",
@@ -30,18 +30,19 @@
     "imagemin-jpegtran": "~5.0.2",
     "imagemin-optipng": "~5.2.1",
     "imagemin-svgo": "~6.0.0",
-    "requirejs": "~2.3.5",
-    "run-sequence": "~1.1.5",
-    "through2": "~2.0.1",
+    "requirejs": "^2.3.5",
+    "run-sequence": "^1.1.5",
+    "through2": "^2.0.1",
     "yyl-file-replacer": "^0.1.0",
-    "yyl-inlinesource": "~1.2.1",
-    "yyl-util": "~1.14.2"
+    "yyl-inlinesource": "^1.2.1",
+    "yyl-util": "^1.14.2"
   },
   "devDependencies": {
     "chai": "~4.1.2"
   },
   "scripts": {
-    "test": "mocha ./test/test.js"
+    "test": "mocha ./test/test.js",
+    "demo-all": "node ./test/demo/main/run.js"
   },
   "repository": {
     "type": "git",
