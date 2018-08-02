@@ -33,7 +33,7 @@
     "requirejs": "^2.3.5",
     "run-sequence": "^1.1.5",
     "through2": "^2.0.1",
-    "yyl-file-replacer": "^0.1.0",
+    "yyl-file-replacer": "^0.2.0",
     "yyl-inlinesource": "^1.2.1",
     "yyl-util": "^1.14.2"
   },
