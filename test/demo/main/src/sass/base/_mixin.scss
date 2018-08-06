@@ -1,5 +1,8 @@
 $cssjsdate: 20151223!default;
 
+body {
+    background: blue;
+}
 @mixin imgBg($url){
     background-image: $url + '?' + $cssjsdate;
 }

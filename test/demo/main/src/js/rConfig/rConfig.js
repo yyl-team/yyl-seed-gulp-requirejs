@@ -3,7 +3,8 @@ var require = {
     // baseUrl: '../js',
     paths: {
         // global
-        'artTemplate' : '../../js/lib/artTemplate/artTemplate'
+        'artTemplate' : '../../js/lib/artTemplate/artTemplate',
+        'wHello': '../../components/w-hello/w-hello'
         // + yyl make
         // - yyl make
     },
@@ -14,6 +15,6 @@ var require = {
     }
 };
 
-if(typeof module === "object" && typeof module.exports === 'object'){
+if (typeof module === 'object' && typeof module.exports === 'object') {
     module.exports = require;
 }

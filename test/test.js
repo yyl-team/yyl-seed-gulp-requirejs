@@ -7,6 +7,11 @@ const frp = require('yyl-file-replacer');
 const util = require('yyl-util');
 const opzer = require('../index.js');
 
+const TEST_CTRL = {
+  ALL: true,
+  WATCH: true
+};
+
 const FRAG_PATH = path.join(__dirname, '__frag');
 const fn = {
   hideUrlTail: function(url) {
@@ -196,59 +201,168 @@ describe('optimize test', () => {
   });
   // - config iOpzer init
 
+  if (TEST_CTRL.ALL) {
+    it ('all test', function (done) {
+      this.timeout(0);
+      iOpzer.response.off();
+      iOpzer.response.on('finished', () => {
+        linkCheck(config, () => {
+          done();
+        });
+      });
+      fn.frag.clearDest(config).then(() => {
+        iOpzer.all();
+      });
+    });
+
+    it ('all --remote test', function (done) {
+      this.timeout(0);
+      iOpzer.response.off();
+      iOpzer.response.on('finished', () => {
+        linkCheck(config, () => {
+          done();
+        });
+      });
+      fn.frag.clearDest(config).then(() => {
+        iOpzer.all({
+          remote: true
+        });
+      });
+    });
+
+    it ('all --isCommit test', function (done) {
+      this.timeout(0);
+      iOpzer.response.off();
+      iOpzer.response.on('finished', () => {
+        linkCheck(config, () => {
+          done();
+        });
+      });
+      fn.frag.clearDest(config).then(() => {
+        iOpzer.all({
+          isCommit: true
+        });
+      });
+    });
+  }
 
 
-  it ('all test', function (done) {
-    this.timeout(0);
-    iOpzer.response.off();
-    iOpzer.response.on('finished', () => {
-      linkCheck(config, () => {
+  if (TEST_CTRL.WATCH) {
+    it ('watch test', function (done) {
+      this.timeout(0);
+
+      new util.Promise((next) => {
+        iOpzer.response.off();
+        iOpzer.response.on('finished', () => {
+          next();
+        });
+        fn.frag.clearDest(config).then(() => {
+          iOpzer.watch();
+        });
+      }).then((next) => { // testing map init
+        const checkingMap = {};
+
+        // p-test
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'components/p-test/p-test.js')
+        ] = [
+          util.path.join(config.alias.jsDest, 'test.js'),
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'components/p-test/p-test.scss')
+        ] = [
+          util.path.join(config.alias.cssDest, 'test.css'),
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'components/p-test/p-test.pug')
+        ] = [
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        // w-hello
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'components/w-hello/w-hello.js')
+        ] = [
+          util.path.join(config.alias.jsDest, 'test.js'),
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'components/w-hello/w-hello.scss')
+        ] = [
+          util.path.join(config.alias.cssDest, 'test.css'),
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        // w-layout
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'components/w-layout/w-layout.pug')
+        ] = [
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        // js/*
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'js/lib/artTemplate/artTemplate.js')
+        ] = [
+          util.path.join(config.alias.jsDest, 'test.js'),
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        // sass/*
+        checkingMap[
+          util.path.join(config.alias.srcRoot, 'sass/base/_mixin.scss')
+        ] = [
+          util.path.join(config.alias.cssDest, 'test.css'),
+          util.path.join(config.alias.htmlDest, 'test.html')
+        ];
+
+        next(checkingMap);
+      }).then((checkingMap, next) => { // run watch test
+        const checkit = function (src, destArr, done) {
+          iOpzer.response.off();
+          const iPaths = [];
+          iOpzer.response.on('onOptimize', (iPath) => {
+            iPaths.push(iPath);
+          });
+          iOpzer.response.on('finished', () => {
+            destArr.forEach((dest) => {
+              // console.log('===', 'expect', iPaths, `src: ${src}`, `dest: ${dest}`, iPaths.indexOf(dest));
+              expect(iPaths.indexOf(dest)).not.equal(-1);
+            });
+            done();
+          });
+          expect(fs.existsSync(src)).to.equal(true);
+          let iCnt = fs.readFileSync(src).toString();
+          setTimeout(() => {
+            fs.writeFileSync(src, `${iCnt}\n`);
+          }, 100);
+        };
+
+        let index = 0;
+        (function runner() {
+          const keyArr = Object.keys(checkingMap);
+          const key = keyArr[index];
+          if (key) {
+            checkit(key, checkingMap[key], () => {
+              index++;
+              runner();
+            });
+          } else {
+            next();
+          }
+        })();
+      }).then(() => {
         done();
-      });
+      }).start();
     });
-    fn.frag.clearDest(config).then(() => {
-      iOpzer.all();
-    });
-  });
+  }
 
-  it ('all --remote test', function (done) {
-    this.timeout(0);
-    iOpzer.response.off();
-    iOpzer.response.on('finished', () => {
-      linkCheck(config, () => {
-        done();
-      });
-    });
-    fn.frag.clearDest(config).then(() => {
-      iOpzer.all({
-        remote: true
-      });
-    });
-  });
-
-  it ('all --isCommit test', function (done) {
-    this.timeout(0);
-    iOpzer.response.off();
-    iOpzer.response.on('finished', () => {
-      linkCheck(config, () => {
-        done();
-      });
-    });
-    fn.frag.clearDest(config).then(() => {
-      iOpzer.all({
-        isCommit: true
-      });
-    });
-  });
-
-  it ('watch test', function (done) {
-    this.timeout(0);
-    iOpzer.response.off();
-    // TODO
-    done();
-  });
   // - main
-
   it ('destroy frag', function (done) {
     this.timeout(0);
     fn.frag.destroy().then(() => {

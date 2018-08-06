@@ -57,8 +57,11 @@ const runner = {
         res.on('finished', () => {
             return done && done();
         });
+        res.on('clear', () => {
+            util.cleanScreen();
+        });
         fn.clearDest(config).then(() => {
-            iOpzer.all();
+            iOpzer.watch();
         });
     }
 };
