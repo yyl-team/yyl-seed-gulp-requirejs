@@ -2,8 +2,6 @@
 var
     //+ yyl init 自动 匹配内容
     commonPath = '../commons',
-    projectName = 'gulp-requirejs',
-    version = '2.15.32',
     //- yyl init 自动 匹配内容
 
     path = require('path'),
@@ -27,16 +25,6 @@ var
 
 var
     config = {
-        workflow: 'gulp-requirejs',
-        name: projectName,
-        version: version,
-        dest: setting.dest,
-
-        // +此部分 yyl server 端config 会进行替换
-        localserver: setting.localserver,
-        resource: { // 自定义项目中其他需打包的文件夹
-            'src/font': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.fontPath)
-        },
         alias: { // yyl server 路径替换地方
             // 公用组件地址
             commons: commonPath,
@@ -74,7 +62,7 @@ var
             // tpl 输出路径
             tplDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.tplPath),
             // assets 输出地址
-            revDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.revPath),
+            revDest: path.join(setting.localserver.root, setting.dest.basePath, setting.dest.revPath)
         },
         // -此部分 yyl server 端config 会进行替换
         commit: {
