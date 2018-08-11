@@ -43,7 +43,8 @@
   "scripts": {
     "test": "mocha ./test/test.js",
     "all": "node ./test/demo/main/run-all.js",
-    "watch": "node ./test/demo/main/run-watch.js"
+    "watch": "node ./test/demo/main/run-watch.js",
+    "init": "node ./test/run-init.js"
   },
   "repository": {
     "type": "git",

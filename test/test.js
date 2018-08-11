@@ -8,8 +8,10 @@ const util = require('yyl-util');
 const opzer = require('../index.js');
 
 const TEST_CTRL = {
-  ALL: true,
-  WATCH: true
+  // ALL: true,
+  // WATCH: true,
+  EXAMPLES: true,
+  INIT: true
 };
 
 const FRAG_PATH = path.join(__dirname, '__frag');
@@ -168,7 +170,110 @@ const linkCheck = function (config, next) {
   paddingCheck();
 };
 
-describe('optimize test', () => {
+if (TEST_CTRL.EXAMPLES) {
+  describe('opzer.example test', () => {
+    it('examples test', function(done) {
+      this.timeout(0);
+      expect(opzer.examples.length).not.equal(0);
+      opzer.examples.forEach((type) => {
+        expect(/^\./.test(type)).not.equal(true);
+      });
+      done();
+    });
+
+    if (TEST_CTRL.INIT) {
+      it('init test', function(done) {
+        this.timeout(0);
+        // TODO
+
+        done();
+      });
+    }
+  });
+}
+
+if (TEST_CTRL.INIT) {
+  describe('opzer.init test', () => {
+    opzer.examples.forEach((type) => {
+      it (`init ${type}`, function(done) {
+        this.timeout(0);
+
+        new util.Promise((next) => { // build frag
+          fn.frag.build().then(() => {
+            next();
+          });
+        }).then((next) => { // run
+          opzer.init(type, FRAG_PATH).on('finished', () => {
+            next();
+          });
+        }).then((next) => { // check completable
+          const COMMONS_PATH = util.path.join(opzer.path, 'commons');
+          const MAIN_PATH = util.path.join(opzer.path, 'examples', type);
+
+          const fromCommons = util.readFilesSync(COMMONS_PATH, (iPath) => {
+            const relativePath = util.path.relative(COMMONS_PATH, iPath);
+            return !relativePath.match(opzer.init.FILTER.COPY_FILTER);
+          });
+
+          const fromMains = util.readFilesSync(MAIN_PATH, (iPath) => {
+            const relativePath = util.path.relative(MAIN_PATH, iPath);
+            return !relativePath.match(opzer.init.FILTER.COPY_FILTER);
+          });
+
+          fromCommons.forEach((fromPath) => {
+            const toPath = util.path.join(
+              FRAG_PATH,
+              util.path.relative(COMMONS_PATH, fromPath)
+            );
+            expect(fs.existsSync(toPath)).to.equal(true);
+          });
+
+          fromMains.forEach((fromPath) => {
+            const toPath = util.path.join(
+              FRAG_PATH,
+              util.path.relative(MAIN_PATH, fromPath)
+            );
+            expect(fs.existsSync(toPath)).to.equal(true);
+          });
+          next();
+        }).then((next) => { // check usage
+          const CONFIG_PATH = util.path.join(FRAG_PATH, 'config.js');
+          const config = util.requireJs(CONFIG_PATH);
+          opzer.optimize(config, FRAG_PATH).on('finished', () => {
+            next();
+          });
+        }).then((next) => { // delete frag
+          fn.frag.destroy().then(() => {
+            next();
+          });
+        }).then(() => {
+          done();
+        }).start();
+      });
+    });
+
+    it('init', function(done) {
+      this.timeout(0);
+      expect(opzer.examples.length).not.equal(0);
+      opzer.examples.forEach((type) => {
+        expect(/^\./.test(type)).not.equal(true);
+      });
+      done();
+    });
+
+    if (TEST_CTRL.INIT) {
+      it('init test', function(done) {
+        this.timeout(0);
+        // TODO
+
+        done();
+      });
+    }
+  });
+
+}
+
+describe('opzer wath, all test', () => {
   const CONFIG_PATH = path.join(FRAG_PATH, 'main/config.js');
   const TEST_PATH = path.join(__dirname, 'demo');
   const CONFIG_DIR = path.dirname(CONFIG_PATH);
@@ -193,9 +298,9 @@ describe('optimize test', () => {
   it ('config init', function (done) {
     this.timeout(0);
     config = util.requireJs(CONFIG_PATH);
-    Object.keys(config.alias).forEach((key) => {
-      config.alias[key] = util.path.join(CONFIG_DIR, config.alias[key]);
-    });
+    // Object.keys(config.alias).forEach((key) => {
+    //   config.alias[key] = util.path.join(CONFIG_DIR, config.alias[key]);
+    // });
     iOpzer = opzer.optimize(config, CONFIG_DIR);
     done();
   });
@@ -361,6 +466,8 @@ describe('optimize test', () => {
       }).start();
     });
   }
+
+
 
   // - main
   it ('destroy frag', function (done) {
