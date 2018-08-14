@@ -34,6 +34,7 @@
     "run-sequence": "^1.1.5",
     "through2": "^2.0.1",
     "yyl-file-replacer": "^0.3.0",
+    "yyl-fs": "^0.1.0",
     "yyl-inlinesource": "^1.2.1",
     "yyl-util": "^1.14.2"
   },
@@ -42,9 +43,9 @@
   },
   "scripts": {
     "test": "mocha ./test/test.js",
-    "all": "node ./test/demo/main/run-all.js",
-    "watch": "node ./test/demo/main/run-watch.js",
-    "init": "node ./test/run-init.js"
+    "all": "node ./test/run.js all --config ./test/demo/main/config.js",
+    "watch": "node ./test/run.js watch --config ./test/demo/main/config.js",
+    "init": "node ./test/run.js init --path ./test/__frag"
   },
   "repository": {
     "type": "git",
