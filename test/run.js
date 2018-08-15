@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('yyl-util');
 
-const opzer = require('../index.js');
+const seed = require('../index.js');
 
 let config = {};
 
@@ -45,7 +45,7 @@ const runner = {
     util.mkdirSync(initPath);
 
     // init
-    opzer.init('single-project', initPath)
+    seed.init('single-project', initPath)
       .on('msg', (...argv) => {
         const [type, iArgv] = argv;
         let iType = type;
@@ -72,26 +72,24 @@ const runner = {
     }
 
     const CONFIG_DIR = path.dirname(configPath);
-    const iOpzer = opzer.optimize(config, CONFIG_DIR);
+    const opzer = seed.optimize(config, CONFIG_DIR);
 
-    const res = iOpzer.response;
-    res.off();
-    res.on('msg', (...argv) => {
-      const [type, iArgv] = argv;
-      let iType = type;
-      if (!util.msg[type]) {
-        iType = 'info';
-      }
-      util.msg[iType](iArgv);
-    });
-    res.on('finished', () => {
-      util.msg.success('task finished');
-    });
-    res.on('clear', () => {
-      util.cleanScreen();
-    });
     fn.clearDest(config).then(() => {
-      iOpzer.all();
+      opzer.all()
+        .on('msg', (...argv) => {
+          const [type, iArgv] = argv;
+          let iType = type;
+          if (!util.msg[type]) {
+            iType = 'info';
+          }
+          util.msg[iType](iArgv);
+        })
+        .on('clear', () => {
+          util.cleanScreen();
+        })
+        .on('finished', () => {
+          util.msg.success('task finished');
+        });
     });
   },
   watch(iEnv) {
@@ -108,27 +106,24 @@ const runner = {
     }
 
     const CONFIG_DIR = path.dirname(configPath);
-    const iOpzer = opzer.optimize(config, CONFIG_DIR);
+    const opzer = seed.optimize(config, CONFIG_DIR);
 
-    const res = iOpzer.response;
-
-    res.off();
-    res.on('msg', (...argv) => {
-      const [type, iArgv] = argv;
-      let iType = type;
-      if (!util.msg[type]) {
-        iType = 'info';
-      }
-      util.msg[iType](iArgv);
-    });
-    res.on('finished', () => {
-      util.msg.success('task finished');
-    });
-    res.on('clear', () => {
-      util.cleanScreen();
-    });
     fn.clearDest(config).then(() => {
-      iOpzer.watch();
+      opzer.watch()
+        .on('clear', () => {
+          util.cleanScreen();
+        })
+        .on('msg', (...argv) => {
+          const [type, iArgv] = argv;
+          let iType = type;
+          if (!util.msg[type]) {
+            iType = 'info';
+          }
+          util.msg[iType](iArgv);
+        })
+        .on('finished', () => {
+          util.msg.success('task finished');
+        });
     });
   }
 };

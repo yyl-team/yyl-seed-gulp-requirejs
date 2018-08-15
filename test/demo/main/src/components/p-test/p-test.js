@@ -6,6 +6,5 @@ require(['artTemplate', 'wHello'], function(artTemplate, wHello) {
         url2: __url('../../images/logo.png'),
         url3: '../../images/test/logo.png/123'.replace('/123', '')
     });
-
     wHello.init();
 });

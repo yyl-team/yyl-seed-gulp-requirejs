@@ -5,11 +5,13 @@ const http = require('http');
 const fs = require('fs');
 const frp = require('yyl-file-replacer');
 const util = require('yyl-util');
-const opzer = require('../index.js');
+const extFs = require('yyl-fs');
+
+const seed = require('../index.js');
 
 const TEST_CTRL = {
-  // ALL: true,
-  // WATCH: true,
+  ALL: true,
+  WATCH: true,
   EXAMPLES: true,
   INIT: true
 };
@@ -23,42 +25,30 @@ const fn = {
   },
   frag: {
     clearDest(config) {
-      return new Promise((next) => {
-        if (fs.existsSync(config.alias.destRoot)) {
-          util.removeFiles(config.alias.destRoot);
-        }
-
-        setTimeout(() => {
+      return extFs.removeFiles(config.alias.destRoot);
+    },
+    here(f, done) {
+      new util.Promise((next) => {
+        fn.frag.build().then(() => {
           next();
-        }, 100);
-      });
+        });
+      }).then((next) => {
+        f(next);
+      }).then(() => {
+        fn.frag.destroy().then(() => {
+          done();
+        });
+      }).start();
     },
     build() {
-      return new Promise((next) => {
-        if (fs.existsSync(FRAG_PATH)) {
-          util.removeFiles(FRAG_PATH);
-        } else {
-          util.mkdirSync(FRAG_PATH);
-        }
-        setTimeout(() => {
-          next();
-        }, 100);
-      });
+      if (fs.existsSync(FRAG_PATH)) {
+        return extFs.removeFiles(FRAG_PATH);
+      } else {
+        return extFs.mkdirSync(FRAG_PATH);
+      }
     },
     destroy() {
-      return new Promise((next) => {
-        try {
-          if (fs.existsSync(FRAG_PATH)) {
-            util.removeFiles(FRAG_PATH, true);
-          }
-
-          setTimeout(() => {
-            next();
-          }, 100);
-        } catch (er) {
-          next();
-        }
-      });
+      return extFs.removeFiles(FRAG_PATH, true);
     }
   }
 };
@@ -171,11 +161,11 @@ const linkCheck = function (config, next) {
 };
 
 if (TEST_CTRL.EXAMPLES) {
-  describe('opzer.example test', () => {
+  describe('seed.example test', () => {
     it('examples test', function(done) {
       this.timeout(0);
-      expect(opzer.examples.length).not.equal(0);
-      opzer.examples.forEach((type) => {
+      expect(seed.examples.length).not.equal(0);
+      seed.examples.forEach((type) => {
         expect(/^\./.test(type)).not.equal(true);
       });
       done();
@@ -184,111 +174,99 @@ if (TEST_CTRL.EXAMPLES) {
 }
 
 if (TEST_CTRL.INIT) {
-  describe('opzer.init test', () => {
-    opzer.examples.filter((type) => {
-      // if (type === 'single-project') {
-      //   return false;
-      // }
-      return true;
-    }).forEach((type) => {
-      if (type == 'commons') {
-        return;
-      }
+  describe('seed.init test', () => {
+    const COMMONS_PATH = util.path.join(seed.path, 'commons');
+
+    // 完整性校验
+    const checkComplatable = (type, targetPath) => {
+      const MAIN_PATH = util.path.join(seed.path, 'examples', type);
+
+      const fromCommons = util.readFilesSync(COMMONS_PATH, (iPath) => {
+        const relativePath = util.path.relative(COMMONS_PATH, iPath);
+        return !relativePath.match(seed.init.FILTER.COPY_FILTER);
+      });
+
+      const fromMains = util.readFilesSync(MAIN_PATH, (iPath) => {
+        const relativePath = util.path.relative(MAIN_PATH, iPath);
+        return !relativePath.match(seed.init.FILTER.COPY_FILTER);
+      });
+
+      fromCommons.forEach((fromPath) => {
+        const toPath = util.path.join(
+          targetPath,
+          util.path.relative(COMMONS_PATH, fromPath)
+        );
+        expect(fs.existsSync(toPath)).to.equal(true);
+      });
+
+      fromMains.forEach((fromPath) => {
+        const toPath = util.path.join(
+          targetPath,
+          util.path.relative(MAIN_PATH, fromPath)
+        );
+        expect(fs.existsSync(toPath)).to.equal(true);
+      });
+    };
+
+    // 可以性校验
+    const checkUsage = (configPath) => {
+      const config = util.requireJs(configPath);
+      const dirname = path.dirname(configPath);
+      const configKeys = Object.keys(config);
+      const runner = (next) => {
+        expect(configKeys.length).not.equal(0);
+        seed.optimize(config, dirname).all().on('finished', () => {
+          expect(fs.readdirSync(path.join(dirname, 'dist')).length).not.equal(0);
+          next();
+        });
+      };
+      return new Promise(runner);
+    };
+
+    seed.examples.forEach((type) => {
       it(`init ${type}`, function(done) {
         this.timeout(0);
-
-        new util.Promise((next) => { // build frag
-          fn.frag.build().then(() => {
-            next();
-          });
-        }).then((next) => { // run
-          opzer.init(type, FRAG_PATH).on('finished', () => {
+        fn.frag.here((next) => {
+          const targetPath = path.join(FRAG_PATH, type);
+          extFs.mkdirSync(targetPath);
+          seed.init(type, targetPath).on('finished', () => {
+            checkComplatable(type, targetPath);
+            const configPath = path.join(targetPath, 'config.js');
             setTimeout(() => {
-              next();
-            }, 200);
+              checkUsage(configPath).then(() => {
+                next();
+              });
+            }, 1000);
           });
-        }).then((next) => { // check completable
-          const COMMONS_PATH = util.path.join(opzer.path, 'commons');
-          const MAIN_PATH = util.path.join(opzer.path, 'examples', type);
-
-          const fromCommons = util.readFilesSync(COMMONS_PATH, (iPath) => {
-            const relativePath = util.path.relative(COMMONS_PATH, iPath);
-            return !relativePath.match(opzer.init.FILTER.COPY_FILTER);
-          });
-
-          const fromMains = util.readFilesSync(MAIN_PATH, (iPath) => {
-            const relativePath = util.path.relative(MAIN_PATH, iPath);
-            return !relativePath.match(opzer.init.FILTER.COPY_FILTER);
-          });
-
-          fromCommons.forEach((fromPath) => {
-            const toPath = util.path.join(
-              FRAG_PATH,
-              util.path.relative(COMMONS_PATH, fromPath)
-            );
-            expect(fs.existsSync(toPath)).to.equal(true);
-          });
-
-          fromMains.forEach((fromPath) => {
-            const toPath = util.path.join(
-              FRAG_PATH,
-              util.path.relative(MAIN_PATH, fromPath)
-            );
-            expect(fs.existsSync(toPath)).to.equal(true);
-          });
-          next();
-        }).then((next) => { // check usage
-          const CONFIG_PATH = util.path.join(FRAG_PATH, 'config.js');
-          const config = util.requireJs(CONFIG_PATH);
-          console.log(88888888, type, CONFIG_PATH, fs.existsSync(CONFIG_PATH))
-          opzer.optimize(config, FRAG_PATH).all().on('finished', (tt) => {
-            console.log('finished', tt)
-            expect(fs.readdirSync(path.join(FRAG_PATH, 'dist')).length).not.equal(0);
-            next();
-          });
-        }).then((next) => { // delete frag
-            console.log(3333333333333333333, type)
-          fn.frag.destroy().then(() => {
-            next();
-          });
-        }).then(() => {
-          done();
-        }).start();
+        }, done);
       });
     });
   });
 }
 
 if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
-  describe('opzer wath, all test', () => {
+  describe('seed wath, all test', () => {
     const CONFIG_PATH = path.join(FRAG_PATH, 'main/config.js');
     const TEST_PATH = path.join(__dirname, 'demo');
     const CONFIG_DIR = path.dirname(CONFIG_PATH);
 
     let config = null;
-    let iOpzer = null;
+    let opzer = null;
 
     it ('build frag & copy', function (done) {
       this.timeout(0);
       fn.frag.build().then(() => {
-        util.copyFiles(
-          TEST_PATH,
-          FRAG_PATH,
-          () => {
-            done();
-          }
-        );
+        extFs.copyFiles(TEST_PATH, FRAG_PATH).then(() => {
+          done();
+        });
       });
     });
 
     // + config iOpzer init
     it ('config init', function (done) {
       this.timeout(0);
-      config = util.requireJs(CONFIG_PATH);
-      // Object.keys(config.alias).forEach((key) => {
-      //   config.alias[key] = util.path.join(CONFIG_DIR, config.alias[key]);
-      // });
-      iOpzer = opzer.optimize(config, CONFIG_DIR);
+      opzer = seed.optimize(util.requireJs(CONFIG_PATH), CONFIG_DIR);
+      config = opzer.getConfigSync();
       done();
     });
     // - config iOpzer init
@@ -296,44 +274,37 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
     if (TEST_CTRL.ALL) {
       it ('all test', function (done) {
         this.timeout(0);
-        iOpzer.response.off();
-        iOpzer.response.on('finished', () => {
-          linkCheck(config, () => {
-            done();
-          });
-        });
         fn.frag.clearDest(config).then(() => {
-          iOpzer.all();
+          opzer.all()
+            .on('finished', () => {
+              linkCheck(config, () => {
+                done();
+              });
+            });
         });
       });
 
       it ('all --remote test', function (done) {
         this.timeout(0);
-        iOpzer.response.off();
-        iOpzer.response.on('finished', () => {
-          linkCheck(config, () => {
-            done();
-          });
-        });
         fn.frag.clearDest(config).then(() => {
-          iOpzer.all({
-            remote: true
-          });
+          opzer.all({ remote: true })
+            .on('finished', () => {
+              linkCheck(config, () => {
+                done();
+              });
+            });
         });
       });
 
       it ('all --isCommit test', function (done) {
         this.timeout(0);
-        iOpzer.response.off();
-        iOpzer.response.on('finished', () => {
-          linkCheck(config, () => {
-            done();
-          });
-        });
         fn.frag.clearDest(config).then(() => {
-          iOpzer.all({
-            isCommit: true
-          });
+          opzer.all({ isCommit: true })
+            .on('finished', () => {
+              linkCheck(config, () => {
+                done();
+              });
+            });
         });
       });
     }
@@ -344,12 +315,11 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
         this.timeout(0);
 
         new util.Promise((next) => {
-          iOpzer.response.off();
-          iOpzer.response.on('finished', () => {
-            next();
-          });
           fn.frag.clearDest(config).then(() => {
-            iOpzer.watch();
+            opzer.watch()
+              .on('finished', () => {
+                next();
+              });
           });
         }).then((next) => { // testing map init
           const checkingMap = {};
@@ -416,12 +386,12 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
           next(checkingMap);
         }).then((checkingMap, next) => { // run watch test
           const checkit = function (src, destArr, done) {
-            iOpzer.response.off();
+            opzer.response.off();
             const iPaths = [];
-            iOpzer.response.on('onOptimize', (iPath) => {
+            opzer.response.on('onOptimize', (iPath) => {
               iPaths.push(iPath);
             });
-            iOpzer.response.on('finished', () => {
+            opzer.response.on('finished', () => {
               destArr.forEach((dest) => {
                 // console.log('===', 'expect', iPaths, `src: ${src}`, `dest: ${dest}`, iPaths.indexOf(dest));
                 expect(iPaths.indexOf(dest)).not.equal(-1);
@@ -453,8 +423,6 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
         }).start();
       });
     }
-
-
 
     // - main
     it ('destroy frag', function (done) {
