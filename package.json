@@ -43,9 +43,9 @@
   },
   "scripts": {
     "test": "mocha ./test/test.js",
-    "all": "node ./test/demo/main/run-all.js",
-    "watch": "node ./test/demo/main/run-watch.js",
-    "init": "node ./test/run-init.js"
+    "all": "node ./test/run.js all --config ./test/demo/main/config.js",
+    "watch": "node ./test/run.js watch --config ./test/demo/main/config.js",
+    "init": "node ./test/run.js init --path ./test/__frag"
   },
   "repository": {
     "type": "git",
