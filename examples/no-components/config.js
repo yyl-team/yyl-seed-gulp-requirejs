@@ -1,7 +1,12 @@
 /*eslint indent: ["error", 2, { "VariableDeclarator": 1 }]*/
 const path = require('path');
 
+// + setting
 const setting = {
+  localserver: {
+    root: './dist',
+    port: 5000
+  },
   dest: {
     basePath: '/pc',
     jsPath: 'js',
@@ -13,9 +18,10 @@ const setting = {
     revPath: 'assets'
   }
 };
+// - setting
 
-const DEST_BASE_PATH = path.join('./dist', setting.dest.basePath);
 const COMMON_PATH = '../commons';
+const DEST_BASE_PATH = path.join(setting.localserver.root, setting.dest.basePath);
 
 const config = {
   alias: {
@@ -26,7 +32,7 @@ const config = {
     revRoot: DEST_BASE_PATH,
 
     // dest 地址
-    destRoot: './dist',
+    destRoot: setting.localserver.root,
 
     // src 地址
     srcRoot: './src',

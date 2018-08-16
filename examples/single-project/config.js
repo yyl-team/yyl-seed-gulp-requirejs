@@ -1,7 +1,11 @@
 /*eslint indent: ["error", 2, { "VariableDeclarator": 1 }]*/
 const path = require('path');
 
+// + setting
 const setting = {
+  localserver: {
+    root: './dist'
+  },
   dest: {
     basePath: '/pc',
     jsPath: 'js',
@@ -13,8 +17,9 @@ const setting = {
     revPath: 'assets'
   }
 };
+// - setting
 
-const DEST_BASE_PATH = path.join('./dist', setting.dest.basePath);
+const DEST_BASE_PATH = path.join(setting.localserver.root, setting.dest.basePath);
 const COMMON_PATH = '../commons';
 
 const config = {
@@ -26,7 +31,7 @@ const config = {
     revRoot: DEST_BASE_PATH,
 
     // dest 地址
-    destRoot: './dist',
+    destRoot: setting.localserver.root,
 
     // src 地址
     srcRoot: './src',
@@ -63,7 +68,7 @@ const config = {
   }
 };
 
-// + assign here
-// - assign here
+// + assign
+// - assign
 
 module.exports = config;
