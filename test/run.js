@@ -35,6 +35,9 @@ const fn = {
 };
 
 const runner = {
+  examples() {
+    console.log(seed.examples);
+  },
   init(iEnv) {
     if (!iEnv.path) {
       return util.msg.warn('task need --path options');

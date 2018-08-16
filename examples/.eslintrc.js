@@ -4,6 +4,9 @@ module.exports = {
         "jquery": true,
         "amd":true
     },
+    "globals": {
+        "__url": true
+    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "ecmaFeatures": {
@@ -65,7 +68,7 @@ module.exports = {
         "padded-blocks": [1, {"blocks": "never"}],
 
         // 一行代码最大长度
-        "max-len": [1, {"code": 100, "ignoreStrings": true, "ignoreRegExpLiterals": true, "ignoreComments": true}],
+        "max-len": [1, {"code": 200, "ignoreStrings": true, "ignoreRegExpLiterals": true, "ignoreComments": true}],
 
         "no-trailing-spaces": [1, {"ignoreComments": true}],
 

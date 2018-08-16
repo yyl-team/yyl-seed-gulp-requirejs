@@ -56,7 +56,7 @@ seed.path
  * @param  {String} config.alias.revDest          assets 输出地址
  * @param  {String} config.alias.tplDest          tpl 输出地址
  * @param  {String} projectPath                   构建项目所在目录
- * @return {Object} opzer                         构建操作句柄
+ * @return {Object} opzer                         压缩实例
  */
 seed.optimize(config, projectPath)
 ```
@@ -64,10 +64,10 @@ seed.optimize(config, projectPath)
 ### opzer
 ```
 /**
- * @param  {Object} op 参数
- * @param  {Object} op.isCommit 执行压缩
- * @param  {Object} op.remote   映射远程
- * @return {Void}
+ * @param  {Object}  op 参数
+ * @param  {Boolean} op.isCommit 执行压缩
+ * @param  {Boolean} op.remote   映射远程
+ * @return {Object}  ctrler      操作句柄
  */
 opzer.watch(op)
 opzer.watchAll(op)
@@ -78,7 +78,7 @@ opzer.html(op)
 opzer.tpl(op)
 opzer.images(op)
 ```
-### opzer.response.on()
+### ctrler.on()
 ```
 /**
  * @param {String} eventName 需要监听的事件，目前有
@@ -91,7 +91,7 @@ opzer.images(op)
 opzer.on(eventName, fn)
 ```
 
-### opzer.response.off()
+### ctrler.off()
 ```
 /**
  * @param  {String} eventName 要解除绑定的 eventName, 
@@ -101,7 +101,7 @@ opzer.on(eventName, fn)
 opzer.off(eventName)
 ```
 
-### opzer.trigger()
+### ctrler.trigger()
 ```
 /**
  * @param {String} eventName 需要触发的事件
@@ -109,3 +109,15 @@ opzer.off(eventName)
  */
 opzer.trigger(eventName, argv)
 ```
+
+### seed.init()
+```
+/**
+ * @param  {String} type       初始化类型
+ * @param  {String} targetPath 初始化目录
+ * @return {Object} ctrler     操作句柄
+ */
+seed.init(type, targetPath)
+```
+
+
