@@ -30,7 +30,7 @@ seed.path
 ### seed.example
 ```
 /**
- * @return {String} seed example 所在目录
+ * @return {Array} seed example list
  */
 seed.path
 ```
@@ -88,7 +88,7 @@ opzer.images(op)
  *                           - clear      对应 fn()
  *                           - start      对应 fn(taskName)
  */
-opzer.response.on(eventName, fn)
+opzer.on(eventName, fn)
 ```
 
 ### opzer.response.off()
@@ -98,14 +98,14 @@ opzer.response.on(eventName, fn)
  *                            不填则全部都解绑
  * @return {Void}
  */
-opzer.response.on(eventName)
+opzer.off(eventName)
 ```
 
-### opzer.response.trigger()
+### opzer.trigger()
 ```
 /**
  * @param {String} eventName 需要触发的事件
  * @param {Array}  argv      参数
  */
-opzer.response.trigger(eventName, argv)
+opzer.trigger(eventName, argv)
 ```

@@ -34,7 +34,7 @@
     "run-sequence": "^1.1.5",
     "through2": "^2.0.1",
     "yyl-file-replacer": "^0.3.0",
-    "yyl-fs": "^0.1.0",
+    "yyl-fs": "^0.1.1",
     "yyl-inlinesource": "^1.2.1",
     "yyl-util": "^1.14.2"
   },
