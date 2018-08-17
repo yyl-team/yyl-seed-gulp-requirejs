@@ -1,4 +1,6 @@
 # 版本信息
+## 1.0.5(2018-08-17)
+* [ADD] 新增 `seed.optimize.handles` 方法
 ## 1.0.4(2018-08-17)
 * [EDIT] bugfix
 
