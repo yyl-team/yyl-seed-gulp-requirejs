@@ -229,15 +229,35 @@ if (TEST_CTRL.INIT) {
         fn.frag.here((next) => {
           const targetPath = path.join(FRAG_PATH, type);
           extFs.mkdirSync(targetPath);
-          seed.init(type, targetPath).on('finished', () => {
-            checkComplatable(type, targetPath);
-            const configPath = path.join(targetPath, 'config.js');
-            setTimeout(() => {
-              checkUsage(configPath).then(() => {
-                next();
-              });
-            }, 1000);
-          });
+
+          const timePadding = {
+            start: 0,
+            msg: 0,
+            finished: 0
+          };
+          seed.init(type, targetPath)
+            .on('start', () => {
+              timePadding.start++;
+            })
+            .on('msg', () => {
+              timePadding.msg++;
+            })
+            .on('finished', () => {
+              timePadding.finished++;
+
+              // times check
+              expect(timePadding.start).to.equal(1);
+              expect(timePadding.msg).to.not.equal(0);
+              expect(timePadding.finished).to.equal(1);
+
+              checkComplatable(type, targetPath);
+              const configPath = path.join(targetPath, 'config.js');
+              setTimeout(() => {
+                checkUsage(configPath).then(() => {
+                  next();
+                });
+              }, 1000);
+            });
         }, done);
       });
     });
@@ -275,8 +295,29 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
       it ('all test', function (done) {
         this.timeout(0);
         fn.frag.clearDest(config).then(() => {
+          const timePadding = {
+            start: 0,
+            msg: 0,
+            finished: 0
+          };
+
           opzer.all()
+            .on('start', () => {
+              timePadding.start++;
+            })
+            .on('msg', () => {
+              timePadding.msg++;
+            })
             .on('finished', () => {
+              timePadding.finished++;
+              // times check
+              // console.log('start', timePadding.start);
+              // console.log('msg', timePadding.msg);
+              // console.log('finished', timePadding.finished);
+              expect(timePadding.start).to.equal(1);
+              expect(timePadding.msg).to.not.equal(0);
+              expect(timePadding.finished).to.equal(1);
+
               linkCheck(config, () => {
                 done();
               });
@@ -385,18 +426,39 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
 
           next(checkingMap);
         }).then((checkingMap, next) => { // run watch test
-          const checkit = function (src, destArr, done) {
+          const checkit = function (src, destArr, callback) {
             opzer.response.off();
             const iPaths = [];
+            const timePadding = {
+              start: 0,
+              msg: 0,
+              finished: 0,
+              optimize: 0
+            };
+            opzer.response.on('start', () => {
+              timePadding.start++;
+            });
+            opzer.response.on('msg', () => {
+              timePadding.msg++;
+            });
             opzer.response.on('onOptimize', (iPath) => {
+              timePadding.optimize++;
               iPaths.push(iPath);
             });
             opzer.response.on('finished', () => {
+              timePadding.finished++;
+
+              // time check
+              expect(timePadding.start).to.equal(1);
+              expect(timePadding.msg).to.not.equal(0);
+              expect(timePadding.optimize).to.not.equal(0);
+              expect(timePadding.finished).to.equal(1);
+
               destArr.forEach((dest) => {
                 // console.log('===', 'expect', iPaths, `src: ${src}`, `dest: ${dest}`, iPaths.indexOf(dest));
                 expect(iPaths.indexOf(dest)).not.equal(-1);
               });
-              done();
+              callback();
             });
             expect(fs.existsSync(src)).to.equal(true);
             let iCnt = fs.readFileSync(src).toString();
