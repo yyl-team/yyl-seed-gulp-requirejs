@@ -1,4 +1,6 @@
 # 版本信息
+## 1.0.7(2018-08-19)
+* [FIX] `opzer.response` 每次 finish 都清空 logcache
 ## 1.0.6(2018-08-19)
 * [FIX] `opzer.response` log bugfix
 
