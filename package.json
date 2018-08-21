@@ -44,7 +44,9 @@
   "scripts": {
     "test": "mocha ./test/test.js",
     "all": "node ./test/run.js all --config ./test/demo/main/config.js",
+    "all-isCommit": "node ./test/run.js all --config ./test/demo/main/config.js --isCommit",
     "watch": "node ./test/run.js watch --config ./test/demo/main/config.js",
+    "watch-isCommit": "node ./test/run.js watch --config ./test/demo/main/config.js --isCommit",
     "init": "node ./test/run.js init --path ./test/__frag",
     "examples": "node ./test/run.js examples"
   },

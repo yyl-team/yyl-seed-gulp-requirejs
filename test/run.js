@@ -78,7 +78,7 @@ const runner = {
     const opzer = seed.optimize(config, CONFIG_DIR);
 
     fn.clearDest(config).then(() => {
-      opzer.all()
+      opzer.all(iEnv)
         .on('msg', (...argv) => {
           const [type, iArgv] = argv;
           let iType = type;
@@ -112,7 +112,7 @@ const runner = {
     const opzer = seed.optimize(config, CONFIG_DIR);
 
     fn.clearDest(config).then(() => {
-      opzer.watch()
+      opzer.watch(iEnv)
         .on('clear', () => {
           util.cleanScreen();
         })
