@@ -25,6 +25,9 @@ var
 
 var
     config = {
+        resource: {
+            'src/font': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.fontPath)
+        },
         alias: { // yyl server 路径替换地方
             // 公用组件地址
             commons: commonPath,

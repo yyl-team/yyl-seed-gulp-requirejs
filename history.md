@@ -1,6 +1,12 @@
 # 版本信息
+## 1.0.8(2018-08-21)
+* [EDIT] `seed.optimize(config)` 中 config 中路径 seed 不会自己去转 成绝对路径了
+* [EDIT] 补充 `config.resource` 的处理
+* [EDIT] 补充用例
+
 ## 1.0.7(2018-08-19)
 * [FIX] `opzer.response` 每次 finish 都清空 logcache
+
 ## 1.0.6(2018-08-19)
 * [FIX] `opzer.response` log bugfix
 

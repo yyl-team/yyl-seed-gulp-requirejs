@@ -18,14 +18,45 @@ const TEST_CTRL = {
 
 const FRAG_PATH = path.join(__dirname, '__frag');
 const fn = {
+  parseConfig(configPath) {
+    const config = require(configPath);
+    const dirname = path.dirname(configPath);
+
+    // alias format to absolute
+    Object.keys(config.alias).forEach((key) => {
+      config.alias[key] = util.path.resolve(
+        dirname,
+        config.alias[key]
+      );
+    });
+
+    if (config.resource) {
+      Object.keys(config.resource).forEach((key) => {
+        const curKey = util.path.resolve(dirname, key);
+        config.resource[curKey] = util.path.resolve(dirname, config.resource[key]);
+        delete config.resource[key];
+      });
+    }
+    return config;
+  },
   hideUrlTail: function(url) {
     return url
       .replace(/\?.*?$/g, '')
       .replace(/#.*?$/g, '');
   },
   frag: {
-    clearDest(config) {
-      return extFs.removeFiles(config.alias.destRoot);
+    clearDest(config, copyFont) {
+      return new Promise((next) => {
+        extFs.removeFiles(config.alias.destRoot).then(() => {
+          if (copyFont) {
+            extFs.copyFiles(config.resource).then(() => {
+              next();
+            });
+          } else {
+            next();
+          }
+        });
+      });
     },
     here(f, done) {
       new util.Promise((next) => {
@@ -210,7 +241,7 @@ if (TEST_CTRL.INIT) {
 
     // 可以性校验
     const checkUsage = (configPath) => {
-      const config = util.requireJs(configPath);
+      const config = fn.parseConfig(configPath);
       const dirname = path.dirname(configPath);
       const configKeys = Object.keys(config);
       const runner = (next) => {
@@ -285,7 +316,7 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
     // + config iOpzer init
     it ('config init', function (done) {
       this.timeout(0);
-      opzer = seed.optimize(util.requireJs(CONFIG_PATH), CONFIG_DIR);
+      opzer = seed.optimize(fn.parseConfig(CONFIG_PATH), CONFIG_DIR);
       config = opzer.getConfigSync();
       done();
     });
@@ -294,7 +325,7 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
     if (TEST_CTRL.ALL) {
       it ('all test', function (done) {
         this.timeout(0);
-        fn.frag.clearDest(config).then(() => {
+        fn.frag.clearDest(config, true).then(() => {
           const timePadding = {
             start: 0,
             msg: 0,
@@ -327,7 +358,7 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
 
       it ('all --remote test', function (done) {
         this.timeout(0);
-        fn.frag.clearDest(config).then(() => {
+        fn.frag.clearDest(config, true).then(() => {
           opzer.all({ remote: true })
             .on('finished', () => {
               linkCheck(config, () => {
@@ -339,7 +370,7 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
 
       it ('all --isCommit test', function (done) {
         this.timeout(0);
-        fn.frag.clearDest(config).then(() => {
+        fn.frag.clearDest(config, true).then(() => {
           opzer.all({ isCommit: true })
             .on('finished', () => {
               linkCheck(config, () => {
@@ -356,7 +387,7 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
         this.timeout(0);
 
         new util.Promise((next) => {
-          fn.frag.clearDest(config).then(() => {
+          fn.frag.clearDest(config, true).then(() => {
             opzer.watch()
               .on('finished', () => {
                 next();

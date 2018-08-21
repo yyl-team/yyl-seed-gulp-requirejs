@@ -1,11 +1,12 @@
 @charset "utf-8";
 @import '../../components/w-layout/w-layout';
 
+@import '../../sass/base/fontface';
+@include fontface('../../sass/base');
+
 @import '../../components/w-hello/w-hello';
 @include w-hello('../../components/w-hello');
-body {
-    background: red;
-}
+
 .p-test-module {
     padding: 8px;
     .tl {

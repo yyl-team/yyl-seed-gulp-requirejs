@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const util = require('yyl-util');
+const extFs = require('yyl-fs');
 
 const seed = require('../index.js');
 
@@ -23,14 +24,31 @@ util.msg.init({
 const fn = {
   clearDest() {
     return new Promise((next) => {
-      if (fs.existsSync(config.alias.destRoot)) {
-        util.removeFiles(config.alias.destRoot);
-      }
-
-      setTimeout(() => {
-        next();
-      }, 100);
+      extFs.removeFiles(config.alias.destRoot).then(() => {
+        extFs.copyFiles(config.resource).then(() => {
+          next();
+        });
+      });
     });
+  },
+  parseConfig(configPath) {
+    const config = require(configPath);
+    const dirname = path.dirname(configPath);
+
+    // alias format to absolute
+    Object.keys(config.alias).forEach((key) => {
+      config.alias[key] = util.path.resolve(
+        dirname,
+        config.alias[key]
+      );
+    });
+
+    Object.keys(config.resource).forEach((key) => {
+      const curKey = util.path.resolve(dirname, key);
+      config.resource[curKey] = util.path.resolve(dirname, config.resource[key]);
+      delete config.resource[key];
+    });
+    return config;
   }
 };
 
@@ -68,7 +86,7 @@ const runner = {
       if (!fs.existsSync(configPath)) {
         return util.msg.warn(`config path not exists: ${configPath}`);
       } else {
-        config = util.requireJs(configPath);
+        config = fn.parseConfig(configPath);
       }
     } else {
       return util.msg.warn('task need --config options');
@@ -102,7 +120,7 @@ const runner = {
       if (!fs.existsSync(configPath)) {
         return util.msg.warn(`config path not exists: ${configPath}`);
       } else {
-        config = util.requireJs(configPath);
+        config = fn.parseConfig(configPath);
       }
     } else {
       return util.msg.warn('task need --config options');
