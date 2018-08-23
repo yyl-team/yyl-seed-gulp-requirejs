@@ -39,8 +39,7 @@
     "yyl-util": "^1.14.2"
   },
   "devDependencies": {
-    "chai": "~4.1.2",
-    "yyl-fs": "^0.1.1"
+    "chai": "~4.1.2"
   },
   "scripts": {
     "test": "mocha ./test/test.js",

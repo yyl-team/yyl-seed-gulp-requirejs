@@ -43,11 +43,14 @@ const fn = {
       );
     });
 
-    Object.keys(config.resource).forEach((key) => {
-      const curKey = util.path.resolve(dirname, key);
-      config.resource[curKey] = util.path.resolve(dirname, config.resource[key]);
-      delete config.resource[key];
-    });
+    if (config.resource) {
+      Object.keys(config.resource).forEach((key) => {
+        const curKey = util.path.resolve(dirname, key);
+        config.resource[curKey] = util.path.resolve(dirname, config.resource[key]);
+        delete config.resource[key];
+      });
+    }
+
     return config;
   }
 };
