@@ -149,6 +149,37 @@ const runner = {
           util.msg.success('task finished');
         });
     });
+  },
+  make(iEnv) {
+    let configPath;
+    if (iEnv.config) {
+      configPath = path.resolve(process.cwd(), iEnv.config);
+      if (!fs.existsSync(configPath)) {
+        return util.msg.warn(`config path not exists: ${configPath}`);
+      } else {
+        config = fn.parseConfig(configPath);
+      }
+    } else {
+      return util.msg.warn('task need --config options');
+    }
+
+    fn.clearDest(config).then(() => {
+      seed.make(iEnv.name, config)
+        .on('start', () => {
+          util.cleanScreen();
+        })
+        .on('msg', (...argv) => {
+          const [type, iArgv] = argv;
+          let iType = type;
+          if (!util.msg[type]) {
+            iType = 'info';
+          }
+          util.msg[iType](iArgv);
+        })
+        .on('finished', () => {
+          util.msg.success('task finished');
+        });
+    });
   }
 };
 
