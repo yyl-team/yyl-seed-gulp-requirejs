@@ -44,7 +44,10 @@
     "watch": "node ./test/run.js watch --config ./test/demo/main/config.js",
     "watch-isCommit": "node ./test/run.js watch --config ./test/demo/main/config.js --isCommit",
     "init": "node ./test/run.js init --path ./test/__frag",
-    "examples": "node ./test/run.js examples"
+    "examples": "node ./test/run.js examples",
+    "make-page": "node ./test/run.js make --config ./test/demo/main/config.js --name p-maketest",
+    "make-widget": "node ./test/run.js make --config ./test/demo/main/config.js --name w-maketest",
+    "make-layout": "node ./test/run.js make --config ./test/demo/main/config.js --name w-layout"
   },
   "repository": {
     "type": "git",
