@@ -163,11 +163,9 @@ const runner = {
       return util.msg.warn('task need --config options');
     }
 
-    const CONFIG_DIR = path.dirname(configPath);
-
     fn.clearDest(config).then(() => {
-      seed.make(iEnv.name, CONFIG_DIR)
-        .on('clear', () => {
+      seed.make(iEnv.name, config)
+        .on('start', () => {
           util.cleanScreen();
         })
         .on('msg', (...argv) => {

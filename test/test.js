@@ -10,16 +10,17 @@ const extFs = require('yyl-fs');
 const seed = require('../index.js');
 
 const TEST_CTRL = {
-  ALL: true,
-  WATCH: true,
   EXAMPLES: true,
-  INIT: true
+  INIT: true,
+  MAKE: true,
+  ALL: true,
+  WATCH: true
 };
 
 const FRAG_PATH = path.join(__dirname, '__frag');
 const fn = {
   parseConfig(configPath) {
-    const config = require(configPath);
+    const config = util.requireJs(configPath);
     const dirname = path.dirname(configPath);
 
     // alias format to absolute
@@ -295,14 +296,12 @@ if (TEST_CTRL.INIT) {
   });
 }
 
-if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
-  describe('seed wath, all test', () => {
+if (TEST_CTRL.MAKE) {
+  describe('seed make test', () => {
     const CONFIG_PATH = path.join(FRAG_PATH, 'main/config.js');
     const TEST_PATH = path.join(__dirname, 'demo');
-    const CONFIG_DIR = path.dirname(CONFIG_PATH);
 
     let config = null;
-    let opzer = null;
 
     it ('build frag & copy', function (done) {
       this.timeout(0);
@@ -316,9 +315,82 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
     // + config iOpzer init
     it ('config init', function (done) {
       this.timeout(0);
-      opzer = seed.optimize(fn.parseConfig(CONFIG_PATH), CONFIG_DIR);
-      config = opzer.getConfigSync();
+      config = fn.parseConfig(CONFIG_PATH);
       done();
+    });
+    // - config iOpzer init
+    // + make test
+    it ('make --name p-xx test', function (done) {
+      this.timeout(0);
+      const name = 'p-maketest';
+      seed.make(name, config)
+        .on('finished', () => {
+          const buildPath = path.join(config.alias.srcRoot, `components/${name}`);
+          expect(fs.existsSync(path.join(buildPath, `${name}.js`))).to.equal(true);
+          expect(fs.existsSync(path.join(buildPath, `${name}.pug`))).to.equal(true);
+          expect(fs.existsSync(path.join(buildPath, `${name}.scss`))).to.equal(true);
+          done();
+        });
+    });
+
+    it ('make --name w-xx test', function (done) {
+      this.timeout(0);
+      const name = 'w-maketest';
+      const rConfigName = 'wMaketest';
+      seed.make(name, config)
+        .on('finished', () => {
+          const buildPath = path.join(config.alias.srcRoot, `components/${name}`);
+          expect(fs.existsSync(path.join(buildPath, `${name}.js`))).to.equal(true);
+          expect(fs.existsSync(path.join(buildPath, `${name}.pug`))).to.equal(true);
+          expect(fs.existsSync(path.join(buildPath, `${name}.scss`))).to.equal(true);
+
+          const rConfigPath = path.join(config.alias.srcRoot, 'js/rConfig/rConfig.js');
+          const cnt = fs.readFileSync(rConfigPath).toString();
+
+          expect(cnt.split(rConfigName).length).to.not.equal(1);
+          done();
+        });
+    });
+    // - make test
+
+    // - main
+    it ('destroy frag', function (done) {
+      this.timeout(0);
+      fn.frag.destroy().then(() => {
+        done();
+      });
+    });
+  });
+}
+
+if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
+  describe('seed wath, all test', () => {
+    const CONFIG_PATH = path.join(FRAG_PATH, 'main/config.js');
+    const TEST_PATH = path.join(__dirname, 'demo');
+    const CONFIG_DIR = path.dirname(CONFIG_PATH);
+
+    let config = null;
+    let opzer = null;
+
+    it ('build frag & copy', function (done) {
+      this.timeout(0);
+      fn.frag.build().then(() => {
+        extFs.copyFiles(TEST_PATH, FRAG_PATH).then(() => {
+          extFs.removeFiles(path.join(FRAG_PATH, 'dist')).then(() => {
+            done();
+          });
+        });
+      });
+    });
+
+    // + config iOpzer init
+    it ('config init', function (done) {
+      this.timeout(0);
+      config = fn.parseConfig(CONFIG_PATH);
+      opzer = seed.optimize(config, CONFIG_DIR);
+      extFs.copyFiles(config.resource).then(() => {
+        done();
+      });
     });
     // - config iOpzer init
 
@@ -518,11 +590,11 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
     }
 
     // - main
-    it ('destroy frag', function (done) {
-      this.timeout(0);
-      fn.frag.destroy().then(() => {
-        done();
-      });
-    });
+    // it ('destroy frag', function (done) {
+    //   this.timeout(0);
+    //   fn.frag.destroy().then(() => {
+    //     done();
+    //   });
+    // });
   });
 }
