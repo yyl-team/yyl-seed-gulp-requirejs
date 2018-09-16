@@ -24,6 +24,10 @@ const DEST_BASE_PATH = path.join(setting.localserver.root, setting.dest.basePath
 const COMMON_PATH = '../commons';
 
 // + base
+Object.assign(config, {
+  localserver: setting.localserver,
+  dest: setting.dest
+});
 // - base
 
 // + alias
