@@ -20,10 +20,17 @@ const setting = {
 };
 // - setting
 
-const DEST_BASE_PATH = path.join(setting.localserver.root, setting.dest.basePath);
+// + vars
 const COMMON_PATH = '../commons';
+const DEST_BASE_PATH = path.join(setting.localserver.root, setting.dest.basePath);
+const SRC_ROOT = './src';
+// - vars
 
 // + base
+Object.assign(config, {
+  localserver: setting.localserver,
+  dest: setting.dest
+});
 // - base
 
 // + alias
@@ -36,7 +43,7 @@ Object.assign(config, {
     // dest 地址
     destRoot: setting.localserver.root,
     // src 地址
-    srcRoot: './src',
+    srcRoot: SRC_ROOT,
     // 项目根目录
     dirname: './',
     // 公用组件地址
