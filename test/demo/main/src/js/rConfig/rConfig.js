@@ -5,7 +5,6 @@ var require = {
         // global
         'artTemplate' : '../../js/lib/artTemplate/artTemplate',
         'wHello': '../../components/w-hello/w-hello',
-        'yyloader': '../../js/lib/yyloader/yyloader',
         'wSubWidget': '../../components/w-sub-widget/w-sub-widget'
         // + yyl make
         // - yyl make

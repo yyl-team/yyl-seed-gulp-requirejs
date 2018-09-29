@@ -590,11 +590,11 @@ if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
     }
 
     // - main
-    // it ('destroy frag', function (done) {
-    //   this.timeout(0);
-    //   fn.frag.destroy().then(() => {
-    //     done();
-    //   });
-    // });
+    it ('destroy frag', function (done) {
+      this.timeout(0);
+      fn.frag.destroy().then(() => {
+        done();
+      });
+    });
   });
 }
