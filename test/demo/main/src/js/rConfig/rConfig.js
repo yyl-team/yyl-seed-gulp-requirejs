@@ -4,7 +4,8 @@ var require = {
     paths: {
         // global
         'artTemplate' : '../../js/lib/artTemplate/artTemplate',
-        'wHello': '../../components/w-hello/w-hello'
+        'wHello': '../../components/w-hello/w-hello',
+        'wSubWidget': '../../components/w-sub-widget/w-sub-widget'
         // + yyl make
         // - yyl make
     },
