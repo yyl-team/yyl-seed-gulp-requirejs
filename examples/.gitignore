@@ -4,10 +4,4 @@ dist/*
 .sass-cache/
 .idea/
 config.mine.js
-
-p-fixLogin/
-testdist/
-build/
-
-testdist/
 build/
