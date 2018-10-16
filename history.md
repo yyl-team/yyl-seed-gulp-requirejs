@@ -2,6 +2,7 @@
 ## 2.5.0(2018-10-16)
 * [EDIT] 当传入 `env.proxy` 时， 生成出来的页面采用绝对路径
 * [FIX] 执行 `seed.init` 时自动生成 `.gitignore`
+* [DEL] 去掉 `example` `no-component`
 
 ## 2.4.5(2018-09-29)
 * [FIX] 修复 `uglify` js 时 在嵌入到 `html` 有时候出现 生成的 js 报错问题
