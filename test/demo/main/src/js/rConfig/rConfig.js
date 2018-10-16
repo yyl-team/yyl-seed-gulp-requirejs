@@ -5,7 +5,8 @@ var require = {
         // global
         'artTemplate' : '../../js/lib/artTemplate/artTemplate',
         'wHello': '../../components/w-hello/w-hello',
-        'wSubWidget': '../../components/w-sub-widget/w-sub-widget'
+        'wSubWidget': '../../components/w-sub-widget/w-sub-widget',
+        'yyloader': '../../js/lib/yyloader/yyloader'
         // + yyl make
         // - yyl make
     },

@@ -223,6 +223,7 @@ if (TEST_CTRL.INIT) {
         return !relativePath.match(seed.init.FILTER.COPY_FILTER);
       });
 
+
       fromCommons.forEach((fromPath) => {
         const toPath = util.path.join(
           targetPath,
@@ -236,6 +237,12 @@ if (TEST_CTRL.INIT) {
           targetPath,
           util.path.relative(MAIN_PATH, fromPath)
         );
+        expect(fs.existsSync(toPath)).to.equal(true);
+      });
+
+      // other
+      ['.gitignore', '.editorconfig', '.eslintrc.js'].forEach((fromPath) => {
+        const toPath = util.path.join(targetPath, fromPath);
         expect(fs.existsSync(toPath)).to.equal(true);
       });
     };
