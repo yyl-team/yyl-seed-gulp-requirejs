@@ -1,5 +1,5 @@
 # 版本信息
-## 2.5.0(2018-10-16)
+## 2.5.1(2018-10-16)
 * [EDIT] 当传入 `env.proxy` 时， 生成出来的页面采用绝对路径
 * [FIX] 执行 `seed.init` 时自动生成 `.gitignore`
 * [DEL] 去掉 `example` `no-component`
