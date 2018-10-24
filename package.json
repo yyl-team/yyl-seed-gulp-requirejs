@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "2.5.1",
+  "version": "2.5.3",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -29,7 +29,7 @@
     "requirejs": "^2.3.6",
     "through2": "^2.0.3",
     "uglify-js": "^2.8.29",
-    "yyl-file-replacer": "^0.4.0",
+    "yyl-file-replacer": "^0.4.1",
     "yyl-fs": "^0.1.1",
     "yyl-inlinesource": "^1.2.1",
     "yyl-seed-response": "^0.1.0",

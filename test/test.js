@@ -90,6 +90,7 @@ const linkCheck = function (config, next) {
   const htmlArr = util.readFilesSync(config.alias.destRoot, /\.html$/);
   const cssArr = util.readFilesSync(config.alias.destRoot, /\.css$/);
   const jsArr = util.readFilesSync(config.alias.destRoot, /\.js$/);
+  const tplArr = util.readFilesSync(config.alias.destRoot, /\.tpl$/);
 
   const destRoot = config.alias.destRoot;
   const LOCAL_SOURCE_REG = new RegExp(`^(${config.commit.hostname})`);
@@ -126,12 +127,26 @@ const linkCheck = function (config, next) {
     }
   };
 
+  const specialPickReg = /^(\/\{\{sid\}\}\/\{\{ssid\}\})$/;
+  let specialPickMatch = false;
+
   htmlArr.forEach((iPath) => {
     frp.htmlPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
       sourcePickup(mPath, path.dirname(iPath));
       return mPath;
     });
   });
+
+  tplArr.forEach((iPath) => {
+    frp.htmlPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+      if (mPath.match(specialPickReg)) {
+        specialPickMatch = true;
+      }
+      sourcePickup(mPath, path.dirname(iPath));
+      return mPath;
+    });
+  });
+
 
   cssArr.forEach((iPath) => {
     frp.cssPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
@@ -156,9 +171,12 @@ const linkCheck = function (config, next) {
   let padding = remoteSource.length +  notMatchLocalSource.length;
   const paddingCheck = function () {
     if (!padding) {
+      expect(['specialPickMatch', specialPickMatch]).to.deep.equal(['specialPickMatch', true]);
       next();
     }
   };
+
+
 
   remoteSource.forEach((iPath) => {
     var rPath = iPath;
