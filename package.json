@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -28,7 +28,6 @@
     "imagemin-svgo": "^7.0.0",
     "requirejs": "^2.3.6",
     "through2": "^2.0.3",
-    "uglify-js": "^2.8.29",
     "yyl-file-replacer": "^0.4.1",
     "yyl-fs": "^0.1.1",
     "yyl-inlinesource": "^1.2.1",
@@ -36,7 +35,8 @@
     "yyl-util": "^1.14.2"
   },
   "devDependencies": {
-    "chai": "^4.1.2"
+    "chai": "^4.1.2",
+    "uglify-js": "^3.4.9"
   },
   "scripts": {
     "test": "mocha ./test/test.js",
