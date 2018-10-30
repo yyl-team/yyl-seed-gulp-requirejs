@@ -10,6 +10,9 @@ var
             root: './dist', // 服务器输出地址
             port: 5000 // 服务器 port
         },
+        proxy: {
+            homePage: 'http://yyweb.yystatic.com/pc/html/test/test.html'
+        },
         dest: {
             basePath: '/pc',
             jsPath: 'js/test',
@@ -25,6 +28,8 @@ var
 
 var
     config = {
+        localserver: setting.localserver, // 只用于方便 yyl server 启动
+        proxy: setting.proxy, // 只用于方便 yyl server 启动
         resource: {
             'src/font': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.fontPath)
         },
