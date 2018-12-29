@@ -1,4 +1,7 @@
 # 版本信息
+## 2.5.8(2018-12-29)
+* [EDIT] `seed` 生成的 html 文件 `demo.html` 改为 `index.html`
+
 ## 2.5.7(2018-12-17)
 * [FIX] 修复 `config.mainHost`， `config.staticHost` 后不带 `/` 会生成路径不对问 题
 
