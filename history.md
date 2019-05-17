@@ -1,4 +1,7 @@
 # 版本信息
+## 2.6.0(2018-05-17)
+* [EDIT] 调整 seed 包 里面的 config 以适配 新版 yyl `3.5.0`
+
 ## 2.5.8(2018-12-29)
 * [EDIT] `seed` 生成的 html 文件 `demo.html` 改为 `index.html`
 

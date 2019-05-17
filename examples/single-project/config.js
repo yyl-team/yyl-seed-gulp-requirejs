@@ -1,6 +1,5 @@
 /* eslint indent: ["error", 2, { "SwitchCase": 1 }] */
 const path = require('path');
-const config = {};
 
 // + vars
 const COMMON_PATH = '../commons';
@@ -25,16 +24,12 @@ const setting = {
 };
 // - setting
 
-// + base
-Object.assign(config, {
-  localserver: setting.localserver,
-  dest: setting.dest
-});
-// - base
-
-// + alias
 const DEST_BASE_PATH = path.join(setting.localserver.root, setting.dest.basePath);
-Object.assign(config, {
+const config = {
+  // + configBase
+  // - configBase
+  localserver: setting.localserver,
+  dest: setting.dest,
   alias: {
     // 输出目录中 到 html, js, css, image 层 的路径
     root: DEST_BASE_PATH,
@@ -65,20 +60,13 @@ Object.assign(config, {
     revDest: path.join(DEST_BASE_PATH, setting.dest.revPath),
     // tpl 输出地址
     tplDest: path.join(DEST_BASE_PATH, setting.dest.tplPath)
-  }
-});
-
-// + commit
-Object.assign(config, {
+  },
+  // + configCommit
   commit: {
     hostname: '//yyweb.yystatic.com/',
     revAddr: `//yyweb.yystatic.com/${setting.dest.basePath}/${setting.dest.revPath}/rev-manifest.json`
   }
-});
-// - commit
-
-
-// + extends
-// - extends
+  // - configCommit
+};
 
 module.exports = config;
