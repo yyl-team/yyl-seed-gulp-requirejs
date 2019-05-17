@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "2.6.0",
+  "version": "2.6.1-beta1",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
