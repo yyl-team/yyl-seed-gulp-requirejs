@@ -1,64 +1,53 @@
-type callback = (...args: any[]) => any;
-type anyObject = { [key: string]: any};
-
-interface Ilocalserver {
-  root: string;
-  [key: string]: any;
+interface Env {
+  [key: string]: any
 }
 
-interface ICommit {
-  hostname: string;
-  revAddr: string;
-  [key: string]: any;
-}
-
-interface IConfig {
+interface Config {
   [key: string]: any;
   seed: string;
   px2rem?: boolean;
-  localserver: Ilocalserver
+  localserver: {
+    root: string;
+    [key: string]: any;
+  }
   dest: string;
   plugins: string[];
-  alias: anyObject;
-  commit: ICommit
+  alias: {
+    [key: string]: string
+  };
+  commit: {
+    hostname: string;
+    revAddr: string;
+    [key: string]: any;
+  }
 }
 
-interface IRes {
-  on(eventName: string, fn: callback): this;
+interface Res {
+  on(eventName: string, fn: () => void): this;
   trigger(eventName: string, args: any[]): this;
 }
 
-interface IFilter {
-  COPY_FILTER: RegExp;
-  EXAMPLE_FILTER: RegExp;
+interface SelfOpzer {
+  watch(env: Env, done: () => void): Res;
+  all(env: Env): Res;
+  getConfigSync(): Config;
+  response: Res;
 }
 
-interface wInit {
-  (type: string, targetPath: string): IRes;
-  examples: string[];
-  FILTER: IFilter;
-}
-
-interface IOpzer {
-  watch(iEnv: anyObject, done: callback): IRes;
-  all(iEnv: anyObject): IRes;
-  getConfigSync(): IConfig;
-  response: IRes;
-}
-
-interface wOpzer {
-  (config: IConfig, root: string): IOpzer;
+interface Opzer {
+  (config: Config, root: string): SelfOpzer;
   handles: string[];
 }
 
-interface Icmd {
+interface Cmd {
   name: string,
   version: string,
   path: string,
-  examples: string[],
-  optimize: wOpzer,
-  init: wInit;
-  make(name: string, config: IConfig): IRes;
+  optimize: Opzer,
+  seed: {
+    default: string[],
+    yy: string[]
+  }
 }
-declare const cmd:Icmd;
+declare const cmd: Cmd;
 export=cmd;

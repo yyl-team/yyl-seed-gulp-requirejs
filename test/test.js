@@ -10,9 +10,7 @@ const extFs = require('yyl-fs');
 const seed = require('../index.js');
 
 const TEST_CTRL = {
-  EXAMPLES: true,
   INIT: true,
-  MAKE: true,
   ALL: true,
   WATCH: true
 };
@@ -176,8 +174,6 @@ const linkCheck = function (config, next) {
     }
   };
 
-
-
   remoteSource.forEach((iPath) => {
     var rPath = iPath;
     if (rPath.match(NO_PROTOCOL)) {
@@ -210,183 +206,6 @@ const linkCheck = function (config, next) {
   paddingCheck();
 };
 
-if (TEST_CTRL.EXAMPLES) {
-  describe('seed.example test', () => {
-    it('examples test', function(done) {
-      this.timeout(0);
-      expect(seed.examples.length).not.equal(0);
-      seed.examples.forEach((type) => {
-        expect(/^\./.test(type)).not.equal(true);
-      });
-      done();
-    });
-  });
-}
-
-if (TEST_CTRL.INIT) {
-  describe('seed.init test', () => {
-    const COMMONS_PATH = util.path.join(seed.path, 'commons');
-
-    // 完整性校验
-    const checkComplatable = (type, targetPath) => {
-      const MAIN_PATH = util.path.join(seed.path, 'examples', type);
-
-      const fromCommons = util.readFilesSync(COMMONS_PATH, (iPath) => {
-        const relativePath = util.path.relative(COMMONS_PATH, iPath);
-        return !relativePath.match(seed.init.FILTER.COPY_FILTER);
-      });
-
-      const fromMains = util.readFilesSync(MAIN_PATH, (iPath) => {
-        const relativePath = util.path.relative(MAIN_PATH, iPath);
-        return !relativePath.match(seed.init.FILTER.COPY_FILTER);
-      });
-
-
-      fromCommons.forEach((fromPath) => {
-        const toPath = util.path.join(
-          targetPath,
-          util.path.relative(COMMONS_PATH, fromPath)
-        );
-        expect(fs.existsSync(toPath)).to.equal(true);
-      });
-
-      fromMains.forEach((fromPath) => {
-        const toPath = util.path.join(
-          targetPath,
-          util.path.relative(MAIN_PATH, fromPath)
-        );
-        expect(fs.existsSync(toPath)).to.equal(true);
-      });
-
-      // other
-      ['.gitignore', '.editorconfig', '.eslintrc.js'].forEach((fromPath) => {
-        const toPath = util.path.join(targetPath, fromPath);
-        expect(fs.existsSync(toPath)).to.equal(true);
-      });
-    };
-
-    // 可以性校验
-    const checkUsage = (configPath) => {
-      const config = fn.parseConfig(configPath);
-      const dirname = path.dirname(configPath);
-      const configKeys = Object.keys(config);
-      const runner = (next) => {
-        expect(configKeys.length).not.equal(0);
-        seed.optimize(config, dirname).all().on('finished', () => {
-          expect(fs.readdirSync(path.join(dirname, 'dist')).length).not.equal(0);
-          next();
-        });
-      };
-      return new Promise(runner);
-    };
-
-    seed.examples.forEach((type) => {
-      it(`init ${type}`, function(done) {
-        this.timeout(0);
-        fn.frag.here((next) => {
-          const targetPath = path.join(FRAG_PATH, type);
-          extFs.mkdirSync(targetPath);
-
-          const timePadding = {
-            start: 0,
-            msg: 0,
-            finished: 0
-          };
-          seed.init(type, targetPath)
-            .on('start', () => {
-              timePadding.start++;
-            })
-            .on('msg', () => {
-              timePadding.msg++;
-            })
-            .on('finished', () => {
-              timePadding.finished++;
-
-              // times check
-              expect(timePadding.start).to.equal(1);
-              expect(timePadding.msg).to.not.equal(0);
-              expect(timePadding.finished).to.equal(1);
-
-              checkComplatable(type, targetPath);
-              const configPath = path.join(targetPath, 'config.js');
-              setTimeout(() => {
-                checkUsage(configPath).then(() => {
-                  next();
-                });
-              }, 1000);
-            });
-        }, done);
-      });
-    });
-  });
-}
-
-if (TEST_CTRL.MAKE) {
-  describe('seed make test', () => {
-    const CONFIG_PATH = path.join(FRAG_PATH, 'main/config.js');
-    const TEST_PATH = path.join(__dirname, 'demo');
-
-    let config = null;
-
-    it ('build frag & copy', function (done) {
-      this.timeout(0);
-      fn.frag.build().then(() => {
-        extFs.copyFiles(TEST_PATH, FRAG_PATH).then(() => {
-          done();
-        });
-      });
-    });
-
-    // + config iOpzer init
-    it ('config init', function (done) {
-      this.timeout(0);
-      config = fn.parseConfig(CONFIG_PATH);
-      done();
-    });
-    // - config iOpzer init
-    // + make test
-    it ('make --name p-xx test', function (done) {
-      this.timeout(0);
-      const name = 'p-maketest';
-      seed.make(name, config)
-        .on('finished', () => {
-          const buildPath = path.join(config.alias.srcRoot, `components/${name}`);
-          expect(fs.existsSync(path.join(buildPath, `${name}.js`))).to.equal(true);
-          expect(fs.existsSync(path.join(buildPath, `${name}.pug`))).to.equal(true);
-          expect(fs.existsSync(path.join(buildPath, `${name}.scss`))).to.equal(true);
-          done();
-        });
-    });
-
-    it ('make --name w-xx test', function (done) {
-      this.timeout(0);
-      const name = 'w-maketest';
-      const rConfigName = 'wMaketest';
-      seed.make(name, config)
-        .on('finished', () => {
-          const buildPath = path.join(config.alias.srcRoot, `components/${name}`);
-          expect(fs.existsSync(path.join(buildPath, `${name}.js`))).to.equal(true);
-          expect(fs.existsSync(path.join(buildPath, `${name}.pug`))).to.equal(true);
-          expect(fs.existsSync(path.join(buildPath, `${name}.scss`))).to.equal(true);
-
-          const rConfigPath = path.join(config.alias.srcRoot, 'js/rConfig/rConfig.js');
-          const cnt = fs.readFileSync(rConfigPath).toString();
-
-          expect(cnt.split(rConfigName).length).to.not.equal(1);
-          done();
-        });
-    });
-    // - make test
-
-    // - main
-    it ('destroy frag', function (done) {
-      this.timeout(0);
-      fn.frag.destroy().then(() => {
-        done();
-      });
-    });
-  });
-}
 
 if (TEST_CTRL.WATCH || TEST_CTRL.ALL) {
   describe('seed wath, all test', () => {
