@@ -5,7 +5,7 @@ const cmd = {
   version: pkg.version,
   path: __dirname,
   optimize: opzer,
-  seed: {
+  initPackage: {
     default: ['init-me-seed-yyl-requirejs'],
     yy: ['@yy/init-me-seed-yyl-requirejs']
   }

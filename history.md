@@ -1,6 +1,12 @@
 # 版本信息
 ## 3.0.0 (*)
+* feat: 新增 `seed.initPackage` 方法
 * feat: 剥离 init 部分以适配新版 yyl
+* feat: 重构 单元测试部分代码
+* feat: update yyl-util 到新版
+* feat: 同步修改 optimize 内容
+* del: 去掉 `seed.init()` 方法
+* del: 去掉 `seed.examples` 方法
 
 ## 2.6.1-beta2(2019-07-05)
 * [ADD] 添加 `index.d.ts`
