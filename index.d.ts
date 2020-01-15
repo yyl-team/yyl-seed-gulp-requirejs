@@ -27,15 +27,15 @@ interface Res {
   trigger(eventName: string, args: any[]): this;
 }
 
-interface SelfOpzer {
+interface Opzer {
   watch(env: Env, done: () => void): Res;
   all(env: Env): Res;
   getConfigSync(): Config;
   response: Res;
 }
 
-interface Opzer {
-  (config: Config, root: string): SelfOpzer;
+interface Optimize {
+  (config: Config, root: string): Opzer;
   handles: string[];
 }
 
@@ -43,7 +43,7 @@ interface Cmd {
   name: string,
   version: string,
   path: string,
-  optimize: Opzer,
+  optimize: Optimize,
   seed: {
     default: string[],
     yy: string[]
