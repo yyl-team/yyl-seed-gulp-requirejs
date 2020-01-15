@@ -41,16 +41,18 @@
     "eslint-plugin-node": "^11.0.0",
     "mocha": "^7.0.0",
     "yyl-hander": "^0.4.0",
+    "yyl-os": "^0.10.2",
     "yyl-print": "^0.7.5",
-    "yyl-seed-test-util": "^0.4.0"
+    "yyl-seed-test-util": "^0.4.0",
+    "yyl-server": "^0.2.0"
   },
   "scripts": {
     "test": "mocha ./test/mocha",
     "test:all.case.base": "mocha ./test/mocha/all.case.base.test.js",
     "all:case.base": "node ./test/runner.js all --config ./test/case/base/config.js",
-    "watch:case.base": "node ./test/runner.js watch --config ./test/case/base/config.js",
-    "all": "mocha ./test/mocha/all.case.base.test.js",
-    "w": "node ./test/runner.js watch --config ./test/case/base/config.js"
+    "watch:case.base": "node ./test/runner.js watch --config ./test/case/base/config.js --proxy",
+    "all": "node ./test/runner.js all --config ./test/case/base/config.js",
+    "w": "node ./test/runner.js watch --config ./test/case/base/config.js --proxy"
   },
   "repository": {
     "type": "git",

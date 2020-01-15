@@ -4,6 +4,7 @@ const extFs = require('yyl-fs');
 const tUtil = require('yyl-seed-test-util');
 const print = require('yyl-print');
 const Hander = require('yyl-hander');
+const { Runner } = require('yyl-server');
 const chalk = require('chalk');
 
 const USERPROFILE = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'];
@@ -67,7 +68,7 @@ const handler = {
         return print.log.warn(`config path not exists: ${configPath}`);
       } else {
         env.workflow = WORKFLOW;
-        config = yh.parseConfig(configPath);
+        config = await yh.parseConfig(configPath);
       }
     } else {
       return print.log.warn('task need --config options');
@@ -84,7 +85,7 @@ const handler = {
     await extFs.removeFiles(config.alias.destRoot);
     await extFs.removeFiles(config.resource);
 
-    return await new Promise((next) => {
+    await new Promise((next) => {
       opzer.all(env)
         .on('msg', (...argv) => {
           const [type, iArgv] = argv;
@@ -130,14 +131,28 @@ const handler = {
     const PROJECT_PATH = path.dirname(configPath);
     yh.setVars({ PROJECT_PATH });
 
-    yh.optimize.init({config, env});
+    yh.optimize.init({config, iEnv: env });
     await yh.optimize.initPlugins();
 
-    const opzer = seed.optimize(config, PROJECT_PATH);
-
-
     // 本地服务器
-    await tUtil.server.start(config.alias.destRoot, config.localserver.port || 5000);
+    const runner = new Runner({
+      config,
+      env,
+      log(type, argu) {
+        if (print.log[type]) {
+          print.log[type](...argu);
+        } else {
+          print.log.info(...argu);
+        }
+      },
+      cwd: PROJECT_PATH
+    });
+
+    await runner.start();
+
+    config = runner.config;
+
+    const opzer = seed.optimize(config, PROJECT_PATH);
 
     await fn.clearDest(config);
 
@@ -169,6 +184,7 @@ const handler = {
           }
           if (!env.silent) {
             print.log.success('task finished');
+            yh.optimize.openHomePage();
           }
           next();
         });

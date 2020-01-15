@@ -23,7 +23,7 @@ const PJ_PATH = path.join(TEST_CASE_PATH, filename);
 
 tUtil.frag.init(FRAG_PATH);
 
-test(`seed.all() case:${filename}`, async () => {
+it(`seed.all() case:${filename}`, async () => {
   const TARGET_PATH = path.join(FRAG_PATH, filename);
   await tUtil.frag.build();
   await extFs.copyFiles(PJ_PATH, TARGET_PATH, (iPath) => {
