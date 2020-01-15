@@ -1,4 +1,7 @@
 # 版本信息
+## 3.0.1 (2020-01-15)
+* feat: 将 optimize 内顶部依赖改为 执行方法后才引入
+
 ## 3.0.0 (2020-01-15)
 * feat: 新增 `seed.initPackage` 方法
 * feat: 剥离 init 部分以适配新版 yyl
