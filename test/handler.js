@@ -103,10 +103,12 @@ const handler = {
         })
         .on('finished', async() => {
           await yh.optimize.afterTask();
-          print.log.success('task finished');
           next();
         });
     });
+
+    print.log.success('task finished');
+    return config;
   },
   async watch({ env }) {
     let config;
@@ -156,7 +158,7 @@ const handler = {
 
     await fn.clearDest(config);
 
-    return await new Promise((next) => {
+    await new Promise((next) => {
       let isUpdate = false;
       opzer.watch(env)
         .on('clear', () => {
@@ -177,18 +179,20 @@ const handler = {
         .on('finished', async() => {
           if (!isUpdate) {
             await yh.optimize.afterTask();
+            if (!env.silent) {
+              yh.optimize.openHomePage();
+            }
             // eslint-disable-next-line require-atomic-updates
             isUpdate = true;
           } else {
             await yh.optimize.afterTask(true);
           }
-          if (!env.silent) {
-            print.log.success('task finished');
-            yh.optimize.openHomePage();
-          }
           next();
         });
     });
+    if (!env.silent) {
+      print.log.success('task finished');
+    }
   }
 };
 

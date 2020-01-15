@@ -22,110 +22,112 @@ function clearDest(config, copyFont) {
   });
 }
 
-const linkCheck = function (config, next) {
-  const htmlArr = extFs.readFilesSync(config.alias.destRoot, /\.html$/);
-  const cssArr = extFs.readFilesSync(config.alias.destRoot, /\.css$/);
-  const jsArr = extFs.readFilesSync(config.alias.destRoot, /\.js$/);
+const linkCheck = function (config) {
+  return new Promise((next) => {
+    const htmlArr = extFs.readFilesSync(config.alias.destRoot, /\.html$/);
+    const cssArr = extFs.readFilesSync(config.alias.destRoot, /\.css$/);
+    const jsArr = extFs.readFilesSync(config.alias.destRoot, /\.js$/);
 
-  const destRoot = config.alias.destRoot;
-  const LOCAL_SOURCE_REG = new RegExp(`^(${config.commit.hostname})`);
-  const REMOTE_SOURCE_REG = /^(http[s]?:|\/\/\w)/;
-  const ABSOLUTE_SOURCE_REG = /^\/(\w)/;
-  const RELATIVE_SOURCE_REG = /^\./;
-  const NO_PROTOCOL = /^\/\/(\w)/;
+    const destRoot = config.alias.destRoot;
+    const LOCAL_SOURCE_REG = new RegExp(`^(${config.commit.hostname})`);
+    const REMOTE_SOURCE_REG = /^(http[s]?:|\/\/\w)/;
+    const ABSOLUTE_SOURCE_REG = /^\/(\w)/;
+    const RELATIVE_SOURCE_REG = /^\./;
+    const NO_PROTOCOL = /^\/\/(\w)/;
 
-  const localSource = [];
-  const remoteSource = [];
-  const notMatchLocalSource = [];
+    const localSource = [];
+    const remoteSource = [];
+    const notMatchLocalSource = [];
 
-  const sourcePickup = function (iPath, dir) {
-    if (iPath.match(LOCAL_SOURCE_REG)) {
-      localSource.push(
-        tUtil.hideUrlTail(
-          util.path.join(destRoot, iPath.replace(LOCAL_SOURCE_REG, ''))
-        )
+    const sourcePickup = function (iPath, dir) {
+      if (iPath.match(LOCAL_SOURCE_REG)) {
+        localSource.push(
+          tUtil.hideUrlTail(
+            util.path.join(destRoot, iPath.replace(LOCAL_SOURCE_REG, ''))
+          )
+        );
+      } else if (iPath.match(ABSOLUTE_SOURCE_REG)) {
+        localSource.push(
+          tUtil.hideUrlTail(
+            util.path.join(destRoot, iPath.replace(LOCAL_SOURCE_REG, '$1'))
+          )
+        );
+      } else if (iPath.match(REMOTE_SOURCE_REG)) {
+        remoteSource.push(iPath);
+      } else if (iPath.match(RELATIVE_SOURCE_REG)) {
+        localSource.push(
+          tUtil.hideUrlTail(
+            util.path.join(dir, iPath)
+          )
+        );
+      }
+    };
+
+    htmlArr.forEach((iPath) => {
+      frp.htmlPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+        sourcePickup(mPath, path.dirname(iPath));
+        return mPath;
+      });
+    });
+
+    cssArr.forEach((iPath) => {
+      frp.cssPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+        sourcePickup(mPath, path.dirname(iPath));
+        return mPath;
+      });
+    });
+
+    jsArr.forEach((iPath) => {
+      frp.jsPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+        sourcePickup(mPath, path.dirname(iPath));
+        return mPath;
+      });
+    });
+
+    localSource.forEach((iPath) => {
+      if (!fs.existsSync(iPath)) {
+        notMatchLocalSource.push(iPath);
+      }
+    });
+
+    let padding = remoteSource.length +  notMatchLocalSource.length;
+    const paddingCheck = function () {
+      if (!padding) {
+        next();
+      }
+    };
+
+    remoteSource.forEach((iPath) => {
+      var rPath = iPath;
+      if (rPath.match(NO_PROTOCOL)) {
+        rPath = rPath.replace(NO_PROTOCOL, 'http://$1');
+      }
+
+
+      http.get(rPath, (res) => {
+        expect([rPath, res.statusCode]).to.deep.equal([rPath, 200]);
+        padding--;
+        paddingCheck();
+      });
+    });
+
+    notMatchLocalSource.forEach((iPath) => {
+      var rPath = util.path.join(
+        config.commit.hostname,
+        util.path.relative(config.alias.destRoot, iPath)
       );
-    } else if (iPath.match(ABSOLUTE_SOURCE_REG)) {
-      localSource.push(
-        tUtil.hideUrlTail(
-          util.path.join(destRoot, iPath.replace(LOCAL_SOURCE_REG, '$1'))
-        )
-      );
-    } else if (iPath.match(REMOTE_SOURCE_REG)) {
-      remoteSource.push(iPath);
-    } else if (iPath.match(RELATIVE_SOURCE_REG)) {
-      localSource.push(
-        tUtil.hideUrlTail(
-          util.path.join(dir, iPath)
-        )
-      );
-    }
-  };
+      if (rPath.match(NO_PROTOCOL)) {
+        rPath = rPath.replace(NO_PROTOCOL, 'http://$1');
+      }
 
-  htmlArr.forEach((iPath) => {
-    frp.htmlPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
-      sourcePickup(mPath, path.dirname(iPath));
-      return mPath;
+      http.get(rPath, (res) => {
+        expect([iPath, rPath, res.statusCode]).to.deep.equal([iPath, rPath, 200]);
+        padding--;
+        paddingCheck();
+      });
     });
+    paddingCheck();
   });
-
-  cssArr.forEach((iPath) => {
-    frp.cssPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
-      sourcePickup(mPath, path.dirname(iPath));
-      return mPath;
-    });
-  });
-
-  jsArr.forEach((iPath) => {
-    frp.jsPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
-      sourcePickup(mPath, path.dirname(iPath));
-      return mPath;
-    });
-  });
-
-  localSource.forEach((iPath) => {
-    if (!fs.existsSync(iPath)) {
-      notMatchLocalSource.push(iPath);
-    }
-  });
-
-  let padding = remoteSource.length +  notMatchLocalSource.length;
-  const paddingCheck = function () {
-    if (!padding) {
-      next();
-    }
-  };
-
-  remoteSource.forEach((iPath) => {
-    var rPath = iPath;
-    if (rPath.match(NO_PROTOCOL)) {
-      rPath = rPath.replace(NO_PROTOCOL, 'http://$1');
-    }
-
-
-    http.get(rPath, (res) => {
-      expect([rPath, res.statusCode]).to.deep.equal([rPath, 200]);
-      padding--;
-      paddingCheck();
-    });
-  });
-
-  notMatchLocalSource.forEach((iPath) => {
-    var rPath = util.path.join(
-      config.commit.hostname,
-      util.path.relative(config.alias.destRoot, iPath)
-    );
-    if (rPath.match(NO_PROTOCOL)) {
-      rPath = rPath.replace(NO_PROTOCOL, 'http://$1');
-    }
-
-    http.get(rPath, (res) => {
-      expect([iPath, rPath, res.statusCode]).to.deep.equal([iPath, rPath, 200]);
-      padding--;
-      paddingCheck();
-    });
-  });
-  paddingCheck();
 };
 
 // 检查 assets async components
