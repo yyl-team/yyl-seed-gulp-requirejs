@@ -96,13 +96,12 @@ const handler = {
           print.log[iType](iArgv);
         })
         .on('clear', () => {
-          print.cleanScreen();
+          // print.cleanScreen();
         })
         .on('loading', (pkgName) => {
           print.log.loading(`loading module ${chalk.green(pkgName)}`);
         })
         .on('finished', async() => {
-          await yh.optimize.afterTask();
           next();
         });
     });
@@ -163,7 +162,7 @@ const handler = {
       opzer.watch(env)
         .on('clear', () => {
           if (!env.silent) {
-            print.cleanScreen();
+            // print.cleanScreen();
           }
         })
         .on('msg', (...argv) => {

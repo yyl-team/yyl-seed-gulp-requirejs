@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "4.0.0-beta1",
+  "version": "4.0.0-beta2",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -28,6 +28,7 @@
     "imagemin-optipng": "7.1.0",
     "imagemin-svgo": "7.0.0",
     "node-sass": "4.13.0",
+    "node-watch": "^0.6.3",
     "requirejs": "2.3.6",
     "through2": "2.0.3",
     "yyl-file-replacer": "0.4.1",

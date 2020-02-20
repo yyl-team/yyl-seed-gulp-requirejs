@@ -31,7 +31,8 @@ var config = {
     localserver: setting.localserver, // 只用于方便 yyl server 启动
     proxy: setting.proxy, // 只用于方便 yyl server 启动
     resource: {
-        'src/font': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.fontPath)
+        'src/font': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.fontPath),
+        'src/ext': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.jsPath)
     },
     alias: { // yyl server 路径替换地方
         // 公用组件地址
