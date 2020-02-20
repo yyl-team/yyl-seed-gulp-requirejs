@@ -178,14 +178,11 @@ const handler = {
         })
         .on('finished', async() => {
           if (!isUpdate) {
-            await yh.optimize.afterTask();
             if (!env.silent) {
               yh.optimize.openHomePage();
             }
             // eslint-disable-next-line require-atomic-updates
             isUpdate = true;
-          } else {
-            await yh.optimize.afterTask(true);
           }
           next();
         });

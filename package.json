@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "3.0.1",
+  "version": "4.0.0-beta1",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -32,6 +32,7 @@
     "through2": "2.0.3",
     "yyl-file-replacer": "0.4.1",
     "yyl-fs": "0.3.3",
+    "yyl-hander": "0.4.0",
     "yyl-inlinesource": "1.2.1",
     "yyl-seed-response": "0.1.0",
     "yyl-util": "2.3.7"
@@ -40,7 +41,6 @@
     "chai": "^4.1.2",
     "eslint-plugin-node": "^11.0.0",
     "mocha": "^7.0.0",
-    "yyl-hander": "^0.4.0",
     "yyl-os": "^0.10.2",
     "yyl-print": "^0.7.5",
     "yyl-seed-test-util": "^0.4.0",
@@ -49,12 +49,10 @@
   "scripts": {
     "test": "mocha ./test/mocha",
     "test:all.case.base": "mocha ./test/mocha/all.case.base.test.js",
-    "all:case.base": "node ./test/runner.js all --config ./test/case/base/config.js",
-    "watch:case.base": "node ./test/runner.js watch --config ./test/case/base/config.js --proxy",
-    "all": "node ./test/runner.js all --config ./test/case/base/config.js",
-    "all:isCommit": "node ./test/runner.js all --config ./test/case/base/config.js --isCommit",
-    "all:frag.all-base": "node ./test/runner.js all --config ./__frag/all-base/base/config.js",
-    "w": "node ./test/runner.js watch --config ./test/case/base/config.js --proxy"
+    "cba": "node ./test/runner.js all --config ./test/case/base/config.js",
+    "cbw": "node ./test/runner.js watch --config ./test/case/base/config.js --proxy",
+    "cbac": "node ./test/runner.js all --config ./test/case/base/config.js --isCommit",
+    "all:frag.all-base": "node ./test/runner.js all --config ./__frag/all-base/base/config.js"
   },
   "repository": {
     "type": "git",
