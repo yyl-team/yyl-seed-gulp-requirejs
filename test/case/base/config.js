@@ -74,7 +74,8 @@ var config = {
     },
     // -此部分 yyl server 端config 会进行替换
     commit: {
-        hostname: 'http://yyweb.yystatic.com/'
+        hostname: 'http://yyweb.yystatic.com/',
+        revAddr: 'http://web.yystatic.com/project/yycom/pc/assets/rev-manifest.json'
     }
 };
 
