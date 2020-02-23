@@ -1,6 +1,9 @@
 # 版本信息
 ## 4.0.0 (*)
 * feat: 整合 yyl-hander 中 afterTask 到构建流程
+* feat: 变 css 压缩 `gulp-minify-css` -> `gulp-clean-css`
+* feat: 去掉异步加载逻辑 (yyl 已经做了， 没必要重复)
+* fix: fix severity vulnerabilities
 
 ## 3.0.1 (2020-01-15)
 * feat: 将 optimize 内顶部依赖改为 执行方法后才引入
