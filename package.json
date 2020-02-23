@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "4.0.0-beta4",
+  "version": "4.0.0-beta5",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -33,7 +33,7 @@
     "requirejs": "2.3.6",
     "rev-hash": "3.0.0",
     "through2": "2.0.3",
-    "yyl-file-replacer": "0.4.1",
+    "yyl-file-replacer": "0.6.2",
     "yyl-fs": "0.3.3",
     "yyl-inlinesource": "1.2.1",
     "yyl-request": "0.1.1",
