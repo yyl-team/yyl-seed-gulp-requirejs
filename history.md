@@ -1,5 +1,5 @@
 # 版本信息
-## 4.0.0 (*)
+## 4.0.0 (2020-02-25)
 * feat: 变 css 压缩 `gulp-minify-css` -> `gulp-clean-css`
 * feat: 去掉异步加载逻辑 (yyl 已经做了， 没必要重复)
 * feat: 迁移 yyl-hander 里面的 afterTask 逻辑到 构建流程
