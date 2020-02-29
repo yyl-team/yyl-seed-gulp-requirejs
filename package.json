@@ -45,11 +45,11 @@
     "eslint": "6.8.0",
     "eslint-plugin-node": "11.0.0",
     "mocha": "7.0.0",
-    "yyl-hander": "0.8.1",
+    "yyl-hander": "0.8.2",
     "yyl-os": "0.10.2",
     "yyl-print": "0.7.5",
     "yyl-seed-test-util": "0.4.0",
-    "yyl-server": "0.2.1"
+    "yyl-server": "0.3.4"
   },
   "scripts": {
     "test": "mocha ./test/mocha",
