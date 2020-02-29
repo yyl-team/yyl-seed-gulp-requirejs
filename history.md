@@ -1,4 +1,7 @@
 # 版本信息
+## 4.0.1 (2020-02-29)
+* feat: 补充 error 
+
 ## 4.0.0 (2020-02-25)
 * feat: 变 css 压缩 `gulp-minify-css` -> `gulp-clean-css`
 * feat: 去掉异步加载逻辑 (yyl 已经做了， 没必要重复)
