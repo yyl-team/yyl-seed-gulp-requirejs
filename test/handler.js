@@ -86,14 +86,17 @@ const handler = {
     await extFs.removeFiles(config.resource);
 
     await new Promise((next) => {
+      let isError = false;
       opzer.all(env)
-        .on('msg', (...argv) => {
-          const [type, iArgv] = argv;
+        .on('msg', (type, ...argv) => {
           let iType = type;
           if (!print.log[type]) {
             iType = 'info';
           }
-          print.log[iType](iArgv);
+          print.log[iType](...argv);
+          if (type === 'error') {
+            isError = argv;
+          }
         })
         .on('clear', () => {
           // print.cleanScreen();
@@ -102,11 +105,15 @@ const handler = {
           print.log.loading(`loading module ${chalk.green(pkgName)}`);
         })
         .on('finished', async() => {
+          if (isError) {
+            print.log.error('task error', ...isError);
+          } else {
+            print.log.success('task finished');
+          }
           next();
         });
     });
 
-    print.log.success('task finished');
     return config;
   },
   async watch({ env }) {
@@ -165,14 +172,13 @@ const handler = {
             // print.cleanScreen();
           }
         })
-        .on('msg', (...argv) => {
-          const [type, iArgv] = argv;
+        .on('msg', (type, ...argv) => {
           let iType = type;
           if (!print.log[type]) {
             iType = 'info';
           }
           if (!env.silent) {
-            print.log[iType](iArgv);
+            print.log[iType](...argv);
           }
         })
         .on('finished', async() => {
