@@ -109,24 +109,3 @@ opzer.off(eventName)
  */
 opzer.trigger(eventName, argv)
 ```
-
-### seed.init()
-```
-/**
- * @param  {String} type       初始化类型
- * @param  {String} targetPath 初始化目录
- * @return {Object} ctrler     操作句柄
- */
-seed.init(type, targetPath)
-```
-
-
-### seed.make()
-```
-/**
- * @param  {String} name       初始化类型
- * @param  {Object} config     项目配置文件
- * @return {Object} ctrler     操作句柄
- */
-seed.make(name, config)
-```
