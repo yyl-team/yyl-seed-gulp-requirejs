@@ -80,7 +80,7 @@ const handler = {
     yh.optimize.init({ config, iEnv: env })
     await yh.optimize.initPlugins()
 
-    const opzer = seed.optimize({ config, root: PROJECT_PATH })
+    const opzer = await seed.optimize({ config, root: PROJECT_PATH })
 
     await extFs.removeFiles(config.alias.destRoot)
     await extFs.removeFiles(config.resource)
