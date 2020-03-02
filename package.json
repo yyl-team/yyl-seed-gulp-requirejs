@@ -6,6 +6,75 @@
     "node": ">= 8.0.0"
   },
   "main": "index.js",
+  "eslintConfig": {
+    "env": {
+      "mocha": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended"
+    ],
+    "rules": {
+      "semi": [
+        "error",
+        "never"
+      ],
+      "node/no-unpublished-require": [
+        0
+      ],
+      "node/exports-style": [
+        "error",
+        "module.exports"
+      ],
+      "node/file-extension-in-import": [
+        "error",
+        "always"
+      ],
+      "node/prefer-global/buffer": [
+        "error",
+        "always"
+      ],
+      "node/prefer-global/console": [
+        "error",
+        "always"
+      ],
+      "node/prefer-global/process": [
+        "error",
+        "always"
+      ],
+      "node/prefer-global/url-search-params": [
+        "error",
+        "always"
+      ],
+      "node/prefer-global/url": [
+        "error",
+        "always"
+      ],
+      "node/prefer-promises/dns": "error",
+      "node/prefer-promises/fs": 0,
+      "quote-props": [
+        "error",
+        "consistent"
+      ],
+      "no-empty": [
+        "error",
+        {
+          "allowEmptyCatch": true
+        }
+      ],
+      "indent": [
+        "warn",
+        2
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "/test/case",
+    "ui-test",
+    "__frag"
+  ],
   "directories": {
     "example": "examples",
     "test": "test"
@@ -52,6 +121,8 @@
     "yyl-server": "0.3.4"
   },
   "scripts": {
+    "eslint": "eslint ./",
+    "eslint:fix": "eslint ./ --fix",
     "test": "mocha ./test/mocha",
     "test:all.case.base": "mocha ./test/mocha/all.case.base.test.js",
     "cba": "node ./test/runner.js all --config ./test/case/base/config.js",
