@@ -58,7 +58,7 @@ seed.path
  * @param  {String} projectPath                   构建项目所在目录
  * @return {Object} opzer                         压缩实例
  */
-seed.optimize(config, projectPath)
+seed.optimize({ config, root })
 ```
 
 ### opzer
