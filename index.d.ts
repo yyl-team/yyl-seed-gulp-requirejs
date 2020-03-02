@@ -34,8 +34,14 @@ interface Opzer {
   response: Res;
 }
 
+interface OptimizeOption {
+  config: Config
+  root: string
+  ctx?: string
+  iEnv?: Env
+}
 interface Optimize {
-  (config: Config, root: string): Opzer;
+  (option: OptimizeOption): Promise<Opzer>;
   handles: string[];
 }
 

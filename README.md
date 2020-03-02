@@ -56,7 +56,7 @@ seed.path
  * @param  {String} config.alias.revDest          assets 输出地址
  * @param  {String} config.alias.tplDest          tpl 输出地址
  * @param  {String} projectPath                   构建项目所在目录
- * @return {Object} opzer                         压缩实例
+ * @return Promise<opzer> opzer                         压缩实例
  */
 seed.optimize({ config, root })
 ```
