@@ -32,6 +32,7 @@ interface Opzer {
   all(env: Env): Res;
   getConfigSync(): Config;
   response: Res;
+  on(eventName: string, fn: () => void): this;
 }
 
 interface OptimizeOption {
