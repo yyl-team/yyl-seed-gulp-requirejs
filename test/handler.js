@@ -87,7 +87,7 @@ const handler = {
 
     await new Promise((next) => {
       let isError = false
-      opzer.all(env)
+      opzer
         .on('msg', (type, ...argv) => {
           let iType = type
           if (!print.log[type]) {
@@ -112,6 +112,7 @@ const handler = {
           }
           next()
         })
+        .all(env)
     })
 
     return config
