@@ -30,10 +30,6 @@ interface Res {
 interface Opzer {
   watch(env: Env, done: () => void): Res;
   all(env: Env): Res;
-  w(env: Env): Res;
-  o(env: Env): Res;
-  d(env: Env): Res;
-  r(env: Env): Res;
   getConfigSync(): Config;
   response: Res;
   on(eventName: string, fn: () => void): this;
