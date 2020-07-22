@@ -1,4 +1,6 @@
 # 版本信息
+## 4.7.1 (2020-07-22)
+* feat: 更换 `gulp-sass` 为 `gulp-dart-sass`
 ## 4.7.0 (2020-07-22)
 * feat: update node-sass@4.14.1 兼容 node@14
 
