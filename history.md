@@ -1,6 +1,6 @@
 # 版本信息
 ## 4.7.0 (2020-07-22)
-* feat update node-sass@4.14.1
+* feat: update node-sass@4.14.1 兼容 node@14
 
 ## 4.6.0 (2020-03-06)
 * del: 去掉 w, o, r, d 方法， 改在上层实现
