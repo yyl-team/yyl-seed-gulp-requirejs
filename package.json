@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "4.6.0",
+  "version": "4.7.0",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -97,7 +97,7 @@
     "imagemin-jpegtran": "6.0.0",
     "imagemin-optipng": "7.1.0",
     "imagemin-svgo": "7.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "4.14.1",
     "node-watch": "^0.6.3",
     "requirejs": "2.3.6",
     "rev-hash": "3.0.0",
