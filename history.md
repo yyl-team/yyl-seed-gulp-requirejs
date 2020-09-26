@@ -1,4 +1,8 @@
 # 版本信息
+## 4.7.2 (2020-09-26)
+* fix: 修复 html文件里面的 `__url(path/to/file)` 失效问题
+* feat: update `yyl-file-replacer@0.6.3`
+
 ## 4.7.1 (2020-07-22)
 * feat: 更换 `gulp-sass` 为 `gulp-dart-sass`
 ## 4.7.0 (2020-07-22)

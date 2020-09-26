@@ -161,7 +161,7 @@ const handler = {
 
     config = runner.config
 
-    const opzer = seed.optimize(config, PROJECT_PATH)
+    const opzer = await seed.optimize({ config, root: PROJECT_PATH })
 
     await fn.clearDest(config)
 
