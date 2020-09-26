@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "4.7.2",
+  "version": "4.7.3",
   "description": "",
   "engines": {
     "node": ">= 8.0.0"
@@ -92,9 +92,9 @@
     "gulp-rename": "1.4.0",
     "gulp-replace-path": "0.4.0",
     "gulp-uglify": "1.5.3",
-    "imagemin": "6.0.0",
-    "imagemin-gifsicle": "6.0.1",
-    "imagemin-jpegtran": "6.0.0",
+    "imagemin": "7.0.1",
+    "imagemin-gifsicle": "7.0.0",
+    "imagemin-jpegtran": "7.0.0",
     "imagemin-optipng": "7.1.0",
     "imagemin-svgo": "7.0.0",
     "node-watch": "^0.6.3",

@@ -1,4 +1,8 @@
 # 版本信息
+## 4.7.3 (2020-09-27)
+* feat: 更新 `imagemin@7.0.1`
+* feat: 更新 `imagemin-gifsicle@7.0.0`
+* feat: 更新 `imagemin-jpegtran@7.0.0`
 ## 4.7.2 (2020-09-26)
 * fix: 修复 html文件里面的 `__url(path/to/file)` 失效问题
 * feat: update `yyl-file-replacer@0.6.3`
