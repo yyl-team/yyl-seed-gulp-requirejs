@@ -1,4 +1,8 @@
 # 版本信息
+## 4.7.4 (2020-10-10)
+* feat： 新增 `yyl-config-types`
+* feat: 完善 `d.ts` 文件
+
 ## 4.7.3 (2020-09-27)
 * feat: 更新 `imagemin@7.0.1`
 * feat: 更新 `imagemin-gifsicle@7.0.0`
