@@ -23,108 +23,109 @@ function clearDest(config, copyFont) {
 }
 
 const linkCheck = function (config) {
-  return new Promise((next) => {
-    const htmlArr = extFs.readFilesSync(config.alias.destRoot, /\.html$/)
-    const cssArr = extFs.readFilesSync(config.alias.destRoot, /\.css$/)
-    const jsArr = extFs.readFilesSync(config.alias.destRoot, /\.js$/)
+  const htmlArr = extFs.readFilesSync(config.alias.destRoot, /\.html$/)
+  const cssArr = extFs.readFilesSync(config.alias.destRoot, /\.css$/)
+  const jsArr = extFs.readFilesSync(config.alias.destRoot, /\.js$/)
 
-    const destRoot = config.alias.destRoot
-    const LOCAL_SOURCE_REG = new RegExp(`^(${config.commit.hostname})`)
-    const REMOTE_SOURCE_REG = /^(http[s]?:|\/\/\w)/
-    const ABSOLUTE_SOURCE_REG = /^\/(\w)/
-    const RELATIVE_SOURCE_REG = /^\./
-    const NO_PROTOCOL = /^\/\/(\w)/
+  const destRoot = config.alias.destRoot
+  const LOCAL_SOURCE_REG = new RegExp(`^(${config.commit.hostname})`)
+  const REMOTE_SOURCE_REG = /^(http[s]?:|\/\/\w)/
+  const ABSOLUTE_SOURCE_REG = /^\/(\w)/
+  const RELATIVE_SOURCE_REG = /^\./
+  const NO_PROTOCOL = /^[/]{2}(\w)/
+  const IS_SERVER_VAR = /\:\w/
 
-    const localSource = []
-    const remoteSource = []
-    const notMatchLocalSource = []
+  const localSource = []
+  const remoteSource = []
+  const notMatchLocalSource = []
 
-    const sourcePickup = function (iPath, dir) {
-      if (iPath.match(LOCAL_SOURCE_REG)) {
-        localSource.push(
-          tUtil.hideUrlTail(
-            util.path.join(destRoot, iPath.replace(LOCAL_SOURCE_REG, ''))
-          )
-        )
-      } else if (iPath.match(ABSOLUTE_SOURCE_REG)) {
-        localSource.push(
-          tUtil.hideUrlTail(
-            util.path.join(destRoot, iPath.replace(LOCAL_SOURCE_REG, '$1'))
-          )
-        )
-      } else if (iPath.match(REMOTE_SOURCE_REG)) {
-        remoteSource.push(iPath)
-      } else if (iPath.match(RELATIVE_SOURCE_REG)) {
-        localSource.push(
-          tUtil.hideUrlTail(
-            util.path.join(dir, iPath)
-          )
-        )
+  const sourcePickup = function (iPath, dir) {
+    if (iPath.match(LOCAL_SOURCE_REG)) {
+      let replacedPath = iPath.replace(LOCAL_SOURCE_REG, '')
+      if (/^\//.test(replacedPath)) {
+        replacedPath = `.${replacedPath}`
       }
+      localSource.push(tUtil.hideUrlTail(util.path.join(path.resolve(destRoot, replacedPath))))
+    } else if (iPath.match(ABSOLUTE_SOURCE_REG)) {
+      localSource.push(
+        tUtil.hideUrlTail(
+          util.path.join(path.resolve(destRoot, iPath.replace(ABSOLUTE_SOURCE_REG, '$1')))
+        )
+      )
+    } else if (iPath.match(REMOTE_SOURCE_REG)) {
+      remoteSource.push(iPath)
+    } else if (iPath.match(RELATIVE_SOURCE_REG)) {
+      localSource.push(tUtil.hideUrlTail(util.path.resolve(dir, iPath)))
     }
+  }
 
-    htmlArr.forEach((iPath) => {
-      frp.htmlPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
-        sourcePickup(mPath, path.dirname(iPath))
-        return mPath
-      })
+  htmlArr.forEach((iPath) => {
+    frp.htmlPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+      sourcePickup(mPath, path.dirname(iPath))
+      return mPath
     })
+  })
 
-    cssArr.forEach((iPath) => {
-      frp.cssPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
-        sourcePickup(mPath, path.dirname(iPath))
-        return mPath
-      })
+  cssArr.forEach((iPath) => {
+    frp.cssPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+      sourcePickup(mPath, path.dirname(iPath))
+      return mPath
     })
+  })
 
-    jsArr.forEach((iPath) => {
-      frp.jsPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
-        sourcePickup(mPath, path.dirname(iPath))
-        return mPath
-      })
+  jsArr.forEach((iPath) => {
+    frp.jsPathMatch(fs.readFileSync(iPath).toString(), (mPath) => {
+      sourcePickup(mPath, path.dirname(iPath))
+      return mPath
     })
+  })
 
-    localSource.forEach((iPath) => {
-      if (!fs.existsSync(iPath)) {
-        notMatchLocalSource.push(iPath)
-      }
-    })
+  localSource.forEach((iPath) => {
+    if (!fs.existsSync(iPath)) {
+      notMatchLocalSource.push(iPath)
+    }
+  })
 
-    let padding = remoteSource.length +  notMatchLocalSource.length
+  return new Promise((next) => {
+    let padding = remoteSource.length + notMatchLocalSource.length
     const paddingCheck = function () {
       if (!padding) {
         next()
       }
     }
 
-    remoteSource.forEach((iPath) => {
-      var rPath = iPath
-      if (rPath.match(NO_PROTOCOL)) {
-        rPath = rPath.replace(NO_PROTOCOL, 'http://$1')
-      }
+    remoteSource.forEach(async () => {
+      // var rPath = iPath
+      // if (rPath.match(NO_PROTOCOL)) {
+      //   rPath = `http:${rPath}`
+      // }
+      // const [err, res] = await extRequest(rPath)
 
-
-      http.get(rPath, (res) => {
-        expect([rPath, res.statusCode]).to.deep.equal([rPath, 200])
-        padding--
-        paddingCheck()
-      })
+      // expect(err).to.equal(undefined)
+      // expect([rPath, res.statusCode]).not.to.deep.equal([rPath, 404])
+      padding--
+      paddingCheck()
     })
 
-    notMatchLocalSource.forEach((iPath) => {
-      var rPath = util.path.join(
+    notMatchLocalSource.forEach(async (iPath) => {
+      var rPath = util.path.resolve(
         config.commit.hostname,
         util.path.relative(config.alias.destRoot, iPath)
       )
       if (rPath.match(NO_PROTOCOL)) {
-        rPath = rPath.replace(NO_PROTOCOL, 'http://$1')
+        rPath = `http:${rPath}`
       }
 
-      http.get(rPath, (res) => {
-        expect([iPath, rPath, res.statusCode]).to.deep.equal([iPath, rPath, 200])
+      if (/^\//.test(rPath) || !rPath.match(frp.REG.IS_HTTP) || rPath.match(IS_SERVER_VAR)) {
         padding--
         paddingCheck()
-      })
+      } else {
+        console.log('noMatchRequest:', rPath)
+        const [, res] = await extRequest({ uri: rPath, timeout: 5000 })
+        expect([iPath, rPath, res.statusCode]).not.to.deep.equal([iPath, rPath, 404])
+        padding--
+        paddingCheck()
+      }
     })
     paddingCheck()
   })
