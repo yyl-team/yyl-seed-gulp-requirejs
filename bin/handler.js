@@ -1,6 +1,5 @@
 const { YylHander } = require('yyl-hander')
 const seed = require('../')
-const chalk = require('chalk')
 const Logger = require('yyl-cmd-logger')
 
 const handler = {

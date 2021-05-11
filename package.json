@@ -6,7 +6,7 @@
     "yylr": "bin/index.js"
   },
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 8.3.0"
   },
   "main": "index.js",
   "eslintConfig": {
@@ -135,7 +135,8 @@
     "cbw": "node ./test/runner.js watch --config ./test/case/base/config.js --proxy",
     "cbac": "node ./test/runner.js all --config ./test/case/base/config.js --isCommit",
     "all:frag.all-base": "node ./test/runner.js all --config ./__frag/all-base/base/config.js",
-    "cea": "node ./test/runner.js all --config ./test/case/err-optimize/config.js"
+    "cea": "node ./test/runner.js all --config ./test/case/err-optimize/config.js",
+    "prepublishOnly": "npm run eslint & npm run test"
   },
   "repository": {
     "type": "git",

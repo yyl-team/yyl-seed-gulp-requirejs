@@ -4,9 +4,8 @@ const extFs = require('yyl-fs')
 const fs = require('fs')
 const frp = require('yyl-file-replacer')
 const tUtil = require('yyl-seed-test-util')
+const extRequest = require('yyl-request')
 const expect = require('chai').expect
-
-const http = require('http')
 
 function clearDest(config, copyFont) {
   return new Promise((next) => {
@@ -33,7 +32,7 @@ const linkCheck = function (config) {
   const ABSOLUTE_SOURCE_REG = /^\/(\w)/
   const RELATIVE_SOURCE_REG = /^\./
   const NO_PROTOCOL = /^[/]{2}(\w)/
-  const IS_SERVER_VAR = /\:\w/
+  const IS_SERVER_VAR = /:\w/
 
   const localSource = []
   const remoteSource = []
