@@ -7874,10 +7874,10 @@ yauzl@^2.4.2:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
-yyl-cmd-logger@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/yyl-cmd-logger/-/yyl-cmd-logger-0.1.7.tgz#0a6e93a5a5e259372379a137ac1d39908dd1f170"
-  integrity sha512-KYsdm/eWuFHX1/B1IWmLxtXaBOGePV+ykM5apt1SOfPj6Wcm/vsyubQ62GhneiObAtNBmEzWQoBRow1kdEe/wg==
+yyl-cmd-logger@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/yyl-cmd-logger/-/yyl-cmd-logger-0.2.0.tgz#cb7bc6d2a40ab10d7eddb312af4fc93ea4989ca2"
+  integrity sha512-0LMh/zdsfbrLTfrZu/xKvYbxHGIEJ6n7il31tFm56J6VakddvMvophmSMlNGqcQDQcV+8hgyANsUwkNUXsjdQQ==
   dependencies:
     "@types/node" "^15.3.0"
     chalk "^4.1.0"

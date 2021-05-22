@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const YylCmdLogger = require('yyl-cmd-logger')
+const { YylCmdLogger } = require('yyl-cmd-logger')
 const chalk = require('chalk')
 const util = require('yyl-util')
 const handler = require('./handler')

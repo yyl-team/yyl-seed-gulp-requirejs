@@ -1,11 +1,11 @@
 const { YylHander } = require('yyl-hander')
 const seed = require('../')
-const Logger = require('yyl-cmd-logger')
+const { YylCmdLogger } = require('yyl-cmd-logger')
 
 const handler = {
   async all({ env = {}, logger }) {
     if (!logger) {
-      logger = new Logger()
+      logger = new YylCmdLogger()
     }
 
     if (env.silent) {
@@ -31,7 +31,7 @@ const handler = {
   },
   async watch({ env = {}, logger }) {
     if (!logger) {
-      logger = new Logger()
+      logger = new YylCmdLogger()
     }
     if (env.silent) {
       logger.setLogLevel(0)

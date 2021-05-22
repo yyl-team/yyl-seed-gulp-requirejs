@@ -1,5 +1,8 @@
 # 版本信息
 
+## 5.0.2 (2021-05-16)
+
+* feat: 更新 `yyl-cmd-logger@0.2.0`
 ## 5.0.1 (2021-05-16)
 * feat: 更新 `yyl-config-types@0.5.3`
 * feat: 更新 `yyl-hander@0.5.3`
