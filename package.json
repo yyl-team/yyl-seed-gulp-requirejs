@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "description": "",
   "bin": {
     "yylr": "bin/index.js"
@@ -103,7 +103,7 @@
     "node-watch": "^0.6.3",
     "requirejs": "2.3.6",
     "rev-hash": "3.0.0",
-    "sass": "1.34.0",
+    "sass": "1.25.0",
     "through2": "2.0.3",
     "yyl-cmd-logger": "^0.2.1",
     "yyl-config-types": "^0.5.3",
