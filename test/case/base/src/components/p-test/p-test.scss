@@ -6,7 +6,6 @@
 
 @import '../../components/w-hello/w-hello';
 @include w-hello('../../components/w-hello');
-
 .p-test-module {
     padding: 8px;
     .tl {

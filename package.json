@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "",
   "bin": {
     "yylr": "bin/index.js"
@@ -87,13 +87,13 @@
     "concat-with-sourcemaps": "^1.1.0",
     "gulp": "^4.0.2",
     "gulp-clean-css": "4.2.0",
-    "gulp-dart-sass": "^1.0.2",
     "gulp-filter": "5.1.0",
     "gulp-plumber": "1.2.0",
     "gulp-prettify": "0.5.0",
     "gulp-pug": "4.0.1",
     "gulp-rename": "1.4.0",
     "gulp-replace-path": "0.4.0",
+    "gulp-sass": "^4.1.0",
     "gulp-uglify": "1.5.3",
     "imagemin": "7.0.1",
     "imagemin-gifsicle": "7.0.0",
