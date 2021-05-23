@@ -34,6 +34,9 @@ var config = {
         'src/font': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.fontPath),
         'src/ext': path.join(setting.localserver.root, setting.dest.basePath, setting.dest.jsPath)
     },
+    concat: {
+        '{$jsDest}/shim.js': ['{$jsDest}/demo.js']
+    },
     alias: { // yyl server 路径替换地方
         // 公用组件地址
         commons: commonPath,
