@@ -1,6 +1,6 @@
 const { YylHander } = require('yyl-hander')
 const seed = require('../')
-const { YylCmdLogger } = require('yyl-cmd-logger')
+const { YylCmdLogger, cleanScreen } = require('yyl-cmd-logger')
 
 const handler = {
   async all({ env = {}, logger }) {
@@ -45,7 +45,10 @@ const handler = {
         if (type === 'msg') {
           logger.log($1, $2)
         } else if (type === 'progress') {
+          // console.log('setProgress', $1, $2, $3)
           logger.setProgress($1, $2, $3)
+        } else if (type === 'cleanScreen') {
+          cleanScreen()
         }
       }
     })
