@@ -1,6 +1,6 @@
 {
   "name": "yyl-seed-gulp-requirejs",
-  "version": "5.0.9",
+  "version": "5.0.10",
   "description": "",
   "bin": {
     "yylr": "bin/index.js"
@@ -109,7 +109,7 @@
     "yyl-config-types": "^0.5.4",
     "yyl-file-replacer": "^0.6.4",
     "yyl-fs": "^0.3.3",
-    "yyl-hander": "^1.3.16",
+    "yyl-hander": "^1.3.17",
     "yyl-inlinesource": "^1.2.1",
     "yyl-request": "0.1.1",
     "yyl-seed-base": "^0.4.1",
