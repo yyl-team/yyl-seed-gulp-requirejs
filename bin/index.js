@@ -25,6 +25,11 @@ const logger = new YylCmdLogger({
     return
   }
 
+  if (env.path || shortEnv.p) {
+    console.log(`path: ${chalk.yellow(path.join(__dirname, '..'))}`)
+    return
+  }
+
   // + yyl config
   const context = process.cwd()
   const configPath = path.join(context, 'config.js')
